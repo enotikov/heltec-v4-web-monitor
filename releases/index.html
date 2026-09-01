@@ -1,0 +1,909 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Документация прошивки Heltec V4 Web Monitor: Wi-Fi, MQTT MeshCoreTel, веб-панель, монитор пакетов и API">
+      
+      
+      
+        <link rel="canonical" href="https://enotikov.github.io/heltec-v4-web-monitor/releases/">
+      
+      
+        <link rel="prev" href="../boards/">
+      
+      
+        <link rel="next" href="../heltec-v4-web-monitor/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../_assets/heltec-v4-web-monitor.svg">
+      <meta name="generator" content="zensical-0.0.32">
+    
+    
+      
+        <title>Загрузка и прошивка релизов - Heltec V4 Web Monitor</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.53a7feaf.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../_stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Навигация"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="./.." title="Heltec V4 Web Monitor" class="md-header__button md-logo" aria-label="Heltec V4 Web Monitor" data-md-component="logo">
+      
+  <img src="../_assets/heltec-v4-web-monitor.svg" alt="Heltec V4 Web Monitor">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Навигация">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Heltec V4 Web Monitor
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Загрузка и прошивка релизов
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Переключить на темную тему"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Переключить на темную тему" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Переключить на светлую тему"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Переключить на светлую тему" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Поиск">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Поиск">
+  <button type="button" class="md-search__button">
+    Поиск
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/enotikov/heltec-v4-web-monitor" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enotikov/heltec-v4-web-monitor
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Heltec V4 Web Monitor" class="md-nav__button md-logo" aria-label="Heltec V4 Web Monitor" data-md-component="logo">
+      
+  <img src="../_assets/heltec-v4-web-monitor.svg" alt="Heltec V4 Web Monitor">
+
+    </a>
+    Heltec V4 Web Monitor
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/enotikov/heltec-v4-web-monitor" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enotikov/heltec-v4-web-monitor
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Введение
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../boards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Устройства
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Прошивка
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Прошивка
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выбор нужного файла
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Какой файл прошивать
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Какой файл прошивать">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление из локальной веб-панели
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Порядок прошивки
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Рекомендуемый прошивальщик
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Начальная настройка для новичков
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Начальная настройка для новичков">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Настройка репитера
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Консоль
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heltec-v4-web-monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heltec V4 Web Monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI-команды
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../web-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Веб-панель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Веб-API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local-builds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cборка
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выбор нужного файла
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Какой файл прошивать
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Какой файл прошивать">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление из локальной веб-панели
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Порядок прошивки
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Рекомендуемый прошивальщик
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Начальная настройка для новичков
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Начальная настройка для новичков">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Настройка репитера
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Консоль
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+    <a href="https://github.com/enotikov/heltec-v4-web-monitor/edit/main/meshcoretel-docs/releases.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="_1">Загрузка и прошивка релизов<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Релизные файлы прошивки MeshCoreTel-firmware публикуются здесь:</p>
+<ul>
+<li><a href="https://github.com/enotikov/heltec-v4-web-monitor/releases">https://github.com/enotikov/heltec-v4-web-monitor/releases</a></li>
+</ul>
+<p>В этом репозитории релизный workflow собирает целевое окружение <code>heltec_v4_repeater_mqtt</code> для высокомощной Heltec V4/V4.3.</p>
+<h2 id="_2">Выбор нужного файла<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Скачайте файл, соответствующий вашему устройству и типу прошивки.</p>
+<p>Примеры:</p>
+<ul>
+<li><code>heltec_v4_repeater_mqtt-v1.15.0-vbart-meshcoretel-v1.0.0-79550a7f.bin</code></li>
+<li><code>heltec_v4_repeater_mqtt-v1.15.0-vbart-meshcoretel-v1.0.0-79550a7f-merged.bin</code></li>
+</ul>
+<h2 id="_3">Какой файл прошивать<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Используйте обычный <code>.bin</code>-файл при обновлении существующего устройства того же типа и той же раскладкой разделов.</p>
+<p>Используйте <code>-merged.bin</code>-файл, когда нужна чистая установка после полной очистки флеш-памяти. Это полный образ ESP32, предназначенный для прошивки с адреса <code>0x0</code>.</p>
+<p>Практическое правило:</p>
+<ul>
+<li><code>.bin</code> = инкрементальное обновление</li>
+<li><code>-merged.bin</code> = очистка и чистая прошивка</li>
+</ul>
+<h3 id="-">Обновление из локальной веб-панели<a class="headerlink" href="#-" title="Permanent link">&para;</a></h3>
+<p>Если узел уже работает и раздел <code>Firmware Update</code> доступен в <code>/app</code>, выберите обычный <code>.bin</code> без суффикса <code>-merged</code>:</p>
+<ol>
+<li>войдите в панель административным паролем;</li>
+<li>в <code>Firmware Update</code> выберите обычный файл прошивки для той же платы и того же типа сборки;</li>
+<li>нажмите <code>Upload</code> и дождитесь <code>100%</code>;</li>
+<li>не отключайте питание и Wi-Fi до перезагрузки;</li>
+<li>после запуска выполните обновление страницы без кеша (<code>Ctrl+F5</code>).</li>
+</ol>
+<p><code>-merged.bin</code> нельзя загружать через Firmware Update. Он содержит загрузчик и таблицу разделов и предназначен только для полной записи через USB с адреса <code>0x0</code>.</p>
+<p>Обычное OTA-обновление сохраняет настройки. Оперативные журналы и реестры, включая карту найденных узлов, после перезагрузки начинают заполняться заново.</p>
+<h2 id="_4">Порядок прошивки<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Откройте страницу релиза и скачайте файл для вашего устройства.</li>
+<li>Убедитесь, что название в имени файла соответствует вашему устройству.</li>
+<li>Выберите один из вариантов: обновить существующую прошивку обычным <code>.bin</code>-файлом, либо сначала полностью очистить устройство и прошить <code>-merged.bin</code>.</li>
+<li>Перезагрузите устройство и завершите настройку после прошивки (Wi-Fi, MQTT, радио и т.п.).</li>
+</ol>
+<h2 id="_5">Рекомендуемый прошивальщик<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Рекомендуемый инструмент для прошивки:</p>
+<ul>
+<li><a href="https://meshcoretel.ru/ru/flasher">https://meshcoretel.ru/ru/flasher</a></li>
+</ul>
+<p>Он уже содержит каталог прошивок под заголовком <em>Прошивки наблюдателя от VBart</em>.</p>
+<p>Рекомендации по использованию:</p>
+<ul>
+<li>применяйте обычный <code>.bin</code> при обновлении существующего устройства</li>
+<li>используйте <code>-merged.bin</code> после очистки, когда нужна чистая прошивка с нуля</li>
+</ul>
+<h2 id="_6">Начальная настройка для новичков<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>Если вы прошиваете MeshCoreTel-firmware впервые, самый простой путь:</p>
+<ol>
+<li>Откройте <a href="https://meshcoretel.ru/ru/flasher">https://meshcoretel.ru/ru/flasher</a>.</li>
+<li>Выберите подходящую прошивку для вашего устройства из раздела <em>Прошивки наблюдателя от VBart</em>.</li>
+<li>Отметьте пункт <em>Очистить устройство</em>, если устанавливаете новую прошивку впервые</li>
+<li>Используйте встроенные инструменты настройки, такие как <em>Настройка репитера</em> и <em>Консоль</em> на сайте прошивальщика для завершения первоначальной конфигурации.</li>
+</ol>
+<h3 id="_7">Настройка репитера<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p><em>Настройка репитера</em> — это пошаговый мастер первой настройки ретранслятора.</p>
+<p>Это традиционный способ сконфигурировать ретранслятор после прошивки, включая:</p>
+<ul>
+<li>имя устройства</li>
+<li>широту и долготу</li>
+<li>пароли администратора и гостя</li>
+<li>настройки радио, в том числе выбор пресета</li>
+<li>интервал объявлений (advert interval)</li>
+<li>интервал массовых объявлений (flood advert interval)</li>
+<li>максимальное количество массовых сообщений (flood max)</li>
+<li>некоторые расширенные настройки ретранслятора</li>
+</ul>
+<p><a href=".././web-panel/">Локальная веб-панель</a> прошивки MeshCoreTel-firmware также содержит те же самые основные настройки, поэтому пользователи могут выполнить начальную настройку там, а к мастеру возвращаться лишь для диагностики или эпизодических изменений. На MQTT-ретрансляторах, где важен максимальный запас ресурсов, всё же лучше отключить веб-панель после завершения настройки, особенно если у вас на устройстве мало памяти.</p>
+<h3 id="_8">Консоль<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p><em>Консоль</em> — это прямой интерфейс командной строки (CLI).</p>
+<p>Он особенно полезен, а часто и необходим, для первичной настройки Wi-Fi:</p>
+<ul>
+<li><code>set wifi.ssid &lt;ваш-ssid&gt;</code></li>
+<li><code>set wifi.pwd &lt;ваш-пароль&gt;</code></li>
+</ul>
+<p>Прошивки MeshCoreTel-firmware включает MQTT-дополнения. В зависимости от устройства, они также могут включать <a href=".././web-panel/">локальную веб-панель</a>.</p>
+<p>Для высокомощной Heltec V4/V4.3 с расширенным монитором также прочитайте <a href=".././heltec-v4-web-monitor/">отдельное руководство</a>.</p>
+<p>Типичные первые шаги после прошивки:</p>
+<ul>
+<li>задать <code>wifi.ssid</code></li>
+<li>задать <code>wifi.pwd</code></li>
+<li>задать <code>mqtt.iata</code></li>
+<li>проверить <code>get mqtt.status</code></li>
+<li>опционально задать <code>mqtt.owner</code> и <code>mqtt.email</code></li>
+<li>опционально включить <code>letsmesh-eu</code> или <code>letsmesh-us</code></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["content.action.edit","content.code.copy","search.highlight","search.suggest"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Скопировано в буфер","clipboard.copy":"Копировать в буфер","search.result.more.one":"Ещё 1 на этой странице","search.result.more.other":"Ещё # на этой странице","search.result.none":"Совпадений не найдено","search.result.one":"Найдено 1 совпадение","search.result.other":"Найдено совпадений: #","search.result.placeholder":"Начните печатать для поиска","search.result.term.missing":"Отсутствует","select.version":"Выберите версию"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.91a19a9e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1868 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Документация прошивки Heltec V4 Web Monitor: Wi-Fi, MQTT MeshCoreTel, веб-панель, монитор пакетов и API">
+      
+      
+      
+        <link rel="canonical" href="https://enotikov.github.io/heltec-v4-web-monitor/web-panel/">
+      
+      
+        <link rel="prev" href="../custom-cli/">
+      
+      
+        <link rel="next" href="../api/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../_assets/heltec-v4-web-monitor.svg">
+      <meta name="generator" content="zensical-0.0.32">
+    
+    
+      
+        <title>Веб-панель ретранслятора - Heltec V4 Web Monitor</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.53a7feaf.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../_stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Навигация"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#-" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="./.." title="Heltec V4 Web Monitor" class="md-header__button md-logo" aria-label="Heltec V4 Web Monitor" data-md-component="logo">
+      
+  <img src="../_assets/heltec-v4-web-monitor.svg" alt="Heltec V4 Web Monitor">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Навигация">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Heltec V4 Web Monitor
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Веб-панель ретранслятора
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Переключить на темную тему"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Переключить на темную тему" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Переключить на светлую тему"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Переключить на светлую тему" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Поиск">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Поиск">
+  <button type="button" class="md-search__button">
+    Поиск
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/enotikov/heltec-v4-web-monitor" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enotikov/heltec-v4-web-monitor
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Heltec V4 Web Monitor" class="md-nav__button md-logo" aria-label="Heltec V4 Web Monitor" data-md-component="logo">
+      
+  <img src="../_assets/heltec-v4-web-monitor.svg" alt="Heltec V4 Web Monitor">
+
+    </a>
+    Heltec V4 Web Monitor
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/enotikov/heltec-v4-web-monitor" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enotikov/heltec-v4-web-monitor
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Введение
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../boards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Устройства
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../releases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Прошивка
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heltec-v4-web-monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heltec V4 Web Monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI-команды
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Веб-панель
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Веб-панель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что это такое
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обзор скриншотов
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Обзор скриншотов">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Скриншот /app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Скриншот /stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Требования
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как открыть панель
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вход и безопасность
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Замечания по производительности
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Навигация и действия
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Навигация и действия">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#packets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /packets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Быстрые команды "get"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выполнение команд CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Информация
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ota" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление прошивки (OTA)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Настройки ретранслятора
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ghost-node-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Режим скрытого узла (Ghost Node Mode)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Настройки MQTT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stats_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обзор /stats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Обзор &#x2f;stats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Объём истории статистики
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Использование на мобильных устройствах
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Типовые задачи
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Типовые задачи">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wi-fi-mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка Wi-Fi и MQTT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Изменение имени устройства
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mqtt-owner-email" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление MQTT Owner или Email
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ota_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дистанционное обновление прошивки (OTA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Использование истории статистики
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Устранение неполадок
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Устранение неполадок">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Браузер предупреждает о сертификате
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Не могу открыть страницу
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Панель открывается, но не удаётся войти
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mqtt_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MQTT становится нестабильным при входе
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Открывается HTTP вместо HTTPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Статистика или настройки не обновляются
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /stats недоступна
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Связанная документация
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Веб-API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local-builds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cборка
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что это такое
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обзор скриншотов
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Обзор скриншотов">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Скриншот /app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Скриншот /stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Требования
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как открыть панель
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вход и безопасность
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Замечания по производительности
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Навигация и действия
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Навигация и действия">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /app
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#packets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /packets
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#get" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Быстрые команды "get"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выполнение команд CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Информация
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ota" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление прошивки (OTA)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Настройки ретранслятора
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ghost-node-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Режим скрытого узла (Ghost Node Mode)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Настройки MQTT
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stats_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обзор /stats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Обзор &#x2f;stats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Объём истории статистики
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Использование на мобильных устройствах
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Типовые задачи
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Типовые задачи">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wi-fi-mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка Wi-Fi и MQTT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Изменение имени устройства
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mqtt-owner-email" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление MQTT Owner или Email
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ota_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дистанционное обновление прошивки (OTA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Использование истории статистики
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Устранение неполадок
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Устранение неполадок">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Браузер предупреждает о сертификате
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Не могу открыть страницу
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Панель открывается, но не удаётся войти
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mqtt_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MQTT становится нестабильным при входе
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-https" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Открывается HTTP вместо HTTPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Статистика или настройки не обновляются
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stats_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /stats недоступна
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Связанная документация
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+    <a href="https://github.com/enotikov/heltec-v4-web-monitor/edit/main/meshcoretel-docs/web-panel.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="-">Веб-панель ретранслятора<a class="headerlink" href="#-" title="Permanent link">&para;</a></h1>
+<p>Эта страница предназначена для конечных пользователей, использующих сборку MeshCoreTel-firmware с включённой локальной веб-панелью.</p>
+<p>Здесь описано, как открыть панель, за что отвечает каждый раздел и чего ожидать при использовании на компьютере или мобильном устройстве.</p>
+<h2 id="_1">Что это такое<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Веб-панель ретранслятора — это локальная страница конфигурации по HTTPS, обслуживаемая непосредственно самим ретранслятором через Wi-Fi.</p>
+<p>Она предоставляет:</p>
+<ul>
+<li>защищённую паролем страницу локального администратора по адресу <code>/app</code></li>
+<li>отдельную страницу статистики и трендов по адресу <code>/stats</code></li>
+<li>монитор принятых и отправленных пакетов по адресу <code>/packets</code></li>
+<li>быстрые команды <code>get</code> для типовых проверок ретранслятора и MQTT</li>
+<li>панель CLI в стиле терминала для полного доступа к командной строке ретранслятора</li>
+<li>редактируемые настройки ретранслятора</li>
+<li>редактируемые настройки MQTT</li>
+<li>исторический обзор статистики с трендами, соседями и недавними событиями</li>
+</ul>
+<p>Рекомендации по использованию:</p>
+<ul>
+<li>используйте панель для первоначальной настройки, эпизодических изменений конфигурации и устранения неполадок</li>
+<li>после завершения работы отдавайте предпочтение команде <code>set web off</code> на MQTT-ретрансляторах, где важен максимальный запас ресурсов</li>
+<li>это оставляет больше памяти, доступной для работы MQTT/WSS, особенно в конфигурациях с двумя WSS-брокерами</li>
+</ul>
+<h2 id="_2">Обзор скриншотов<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Скриншоты ниже показывают текущее разделение на облегчённую страницу администратора <code>/app</code> и отдельную страницу статуса <code>/stats</code>.</p>
+<h3 id="app">Скриншот <code>/app</code><a class="headerlink" href="#app" title="Permanent link">&para;</a></h3>
+<p><img alt="Обзор веб-панели ретранслятора /app" src=".././_assets/repeater_web_panel_app_light.webp#only-light" />
+<img alt="Обзор веб-панели ретранслятора /app" src=".././_assets/repeater_web_panel_app_dark.webp#only-dark" /></p>
+<h3 id="stats">Скриншот <code>/stats</code><a class="headerlink" href="#stats" title="Permanent link">&para;</a></h3>
+<p><img alt="Обзор веб-панели ретранслятора /stats" src=".././_assets/repeater_web_panel_stats_light.webp#only-light" />
+<img alt="Обзор веб-панели ретранслятора /stats" src=".././_assets/repeater_web_panel_stats_dark.webp#only-dark" /></p>
+<h2 id="_3">Требования<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Вам потребуется:</p>
+<ul>
+<li>поддерживаемая сборка прошивки MeshCoreTel</li>
+<li>настроенный Wi-Fi на ретрансляторе</li>
+<li>ретранслятор, подключённый к вашей локальной сети</li>
+<li>пароль администратора ретранслятора</li>
+</ul>
+<p>На некоторых платформах с ограниченными ресурсами веб-панель отключена, чтобы уложиться в лимиты флеш-памяти. Если ваше устройство её не поддерживает, <code>get web.status</code> не покажет её как доступную.</p>
+<h2 id="_4">Как открыть панель<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Подключите ретранслятор к Wi-Fi.</li>
+<li>Узнайте его IP-адрес.</li>
+<li>Откройте <code>https://&lt;IP-репитера&gt;/</code> в браузере.</li>
+<li>Примите предупреждение браузера о самоподписанном сертификате.</li>
+<li>Введите пароль администратора ретранслятора.</li>
+</ol>
+<p>Полезные команды CLI:</p>
+<ul>
+<li><code>get wifi.status</code>: показывает состояние Wi-Fi и IP-адрес при подключении.</li>
+<li><code>get web.status</code>: показывает, запущена ли веб-панель и по какому URL она доступна.</li>
+</ul>
+<p>Пример:</p>
+<ul>
+<li><code>https://10.33.135.208/</code></li>
+</ul>
+<h2 id="_5">Вход и безопасность<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<ul>
+<li>панель использует тот же пароль администратора, что и CLI ретранслятора</li>
+<li>соединение по HTTPS, но сертификат самоподписанный</li>
+<li>браузеры будут выдавать предупреждение при первом подключении</li>
+<li>после входа панель открывает доступ к CLI ретранслятора</li>
+</ul>
+<p>Панель предназначена для локального администрирования в доверенной сети и не рассчитана на использование в открытом интернете.</p>
+<h2 id="_6">Замечания по производительности<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>Панель использует HTTPS и расходует память. На устройствах, работающих с одним или двумя WSS MQTT-брокерами, открытие панели уменьшает запас ресурсов для MQTT, пока сессия активна.</p>
+<p>Рекомендуемая практика для развёртывания ретрансляторов:</p>
+<ul>
+<li>включайте панель для первоначальной настройки</li>
+<li>используйте её снова для периодических проверок или устранения неполадок</li>
+<li>отключайте командой <code>set web off</code> после завершения, чтобы у MQTT был максимальный запас ресурсов</li>
+</ul>
+<h2 id="_7">Навигация и действия<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>Веб-панель состоит из трёх основных страниц:</p>
+<ul>
+<li><code>/app</code>: облегчённый вид для управления и конфигурации</li>
+<li><code>/stats</code>: текущий статус, тренды, соседи и недавние события</li>
+<li><code>/packets</code>: живой журнал метаданных RX, TX и неудачных TX-пакетов</li>
+</ul>
+<p>Обе страницы имеют одинаковую верхнюю навигацию и служебные действия.</p>
+<h3 id="app_1"><code>/app</code><a class="headerlink" href="#app_1" title="Permanent link">&para;</a></h3>
+<p>Страница <code>/app</code> — это основной интерфейс администратора и конфигурации.</p>
+<p>Она включает:</p>
+<ul>
+<li>навигацию: <code>App</code>, <code>Stats</code> и <code>Packets</code></li>
+<li><code>Advert</code> (Объявление)</li>
+<li><code>Reboot</code> (Перезагрузка)</li>
+<li>переключатель темы</li>
+<li><code>Logout</code> (Выход)</li>
+</ul>
+<p>Используйте <code>Start OTA</code> только тогда, когда намереваетесь обновить прошивку дистанционно.</p>
+<h3 id="stats_1"><code>/stats</code><a class="headerlink" href="#stats_1" title="Permanent link">&para;</a></h3>
+<p>Страница <code>/stats</code> — это раздел для текущего статуса и хронологии данных.</p>
+<p>Она включает:</p>
+<ul>
+<li>навигацию: <code>App</code>, <code>Stats</code> и <code>Packets</code></li>
+<li><code>Refresh</code> (Обновить)</li>
+<li>переключатель автообновления <code>↻</code></li>
+<li><code>Reboot</code> (Перезагрузка)</li>
+<li>переключатель темы <code>☀</code>/<code>☾</code></li>
+<li><code>Logout</code> (Выход)</li>
+</ul>
+<h3 id="packets"><code>/packets</code><a class="headerlink" href="#packets" title="Permanent link">&para;</a></h3>
+<p>Страница <code>/packets</code> показывает последние пакеты, которые ретранслятор принял, передал или не смог передать. Для каждой записи доступны время, направление, тип, маршрут, RSSI/SNR для RX, полный размер, размер полезной нагрузки, число хопов, расчётное эфирное время, сокращённый хеш и порядковый номер. Нажатие на строку открывает подробную карточку со всеми сохранёнными метаданными, сведениями о проверенном узле и однозначно сопоставленных узлах пути; содержимое зашифрованной полезной нагрузки при этом не сохраняется и не раскрывается.</p>
+<p>Над таблицей находится карта узлов и пакетной активности. Узлы добавляются только из объявлений (<code>advert</code>) с корректной подписью и координатами. Для такого объявления линия до ретранслятора считается проверенной. Совпадения сокращённых хешей пути с известными узлами показываются пунктиром как предположение; если конечную точку определить нельзя, карта показывает трёхсекундный импульс у ретранслятора. Линии и импульсы исчезают через три секунды. Карта использует Leaflet и тайлы OpenStreetMap, поэтому для её загрузки браузеру нужен доступ в интернет; таблица пакетов продолжает работать без карты.</p>
+<p>Для Heltec V4 реестр карты сохраняет до 128 уникальных проверенных узлов в оперативной памяти. Обновлённое объявление меняет сведения существующего узла, но старые узлы не вытесняются новыми и не удаляются командой очистки журнала пакетов. Реестр очищается только при перезагрузке платы; если он заполнен, дополнительные неизвестные узлы не заменяют уже сохранённые.</p>
+<p>Монитор обновляется каждые две секунды, пока вкладка видима и включён режим <code>Live</code>. Доступны фильтры по направлению, типу и минимальному RSSI, ограничение числа строк и экспорт текущей выборки в CSV.</p>
+<p>Журнал хранится в кольцевом буфере PSRAM (с резервным размещением во внутренней памяти) и не записывает каждый пакет во flash. По умолчанию сохраняется до 128 последних записей. Если сетевой поток временно удерживает буфер, LoRa-обработчик не блокируется: такая запись пропускается и учитывается счётчиком <code>Dropped</code>.</p>
+<p>Содержимое зашифрованной полезной нагрузки не выводится. Страница показывает только радиометаданные и сокращённый хеш пакета.</p>
+<p>Полезные команды CLI:</p>
+<ul>
+<li><code>get web.packets.status</code></li>
+<li><code>clear web.packets</code></li>
+</ul>
+<h2 id="get">Быстрые команды "get"<a class="headerlink" href="#get" title="Permanent link">&para;</a></h2>
+<p>Этот раздел выполняет стандартные команды только для чтения для:</p>
+<ul>
+<li>Wi-Fi</li>
+<li>MQTT</li>
+</ul>
+<p>Они удобны для быстрых проверок без ввода команд в поле CLI. Быстрые действия MQTT включают <code>mqtt.status</code>, <code>mqtt.client_version</code>, <code>mqtt.iata</code>, <code>mqtt.owner</code> и <code>mqtt.email</code>.</p>
+<h2 id="cli">Выполнение команд CLI<a class="headerlink" href="#cli" title="Permanent link">&para;</a></h2>
+<p>Это мини-терминал для CLI ретранслятора.</p>
+<ul>
+<li>нажмите <code>Enter</code>, чтобы выполнить команду</li>
+<li>история команд отображается в окне терминала ниже</li>
+<li>кнопки сохранения в других местах страницы также показывают сгенерированную команду и ответ здесь</li>
+<li>здесь доступна команда <code>clock</code>, если нужно узнать текущее время платы ретранслятора</li>
+<li>авторизованные сессии могут выполнять те же команды CLI, которые принимает ретранслятор</li>
+</ul>
+<p>Это позволяет легко увидеть, что именно панель отправила ретранслятору.</p>
+<h2 id="_8">Информация<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<p>В этом разделе отображается:</p>
+<ul>
+<li><code>Hardware</code>: модель устройства</li>
+<li><code>Firmware</code>: версия прошивки с датой сборки</li>
+<li><code>Public Key</code> (Публичный ключ)</li>
+</ul>
+<h2 id="ota">Обновление прошивки (OTA)<a class="headerlink" href="#ota" title="Permanent link">&para;</a></h2>
+<p>Этот раздел позволяет безопасно загружать прошивку на устройство по Wi-Fi.</p>
+<p>Чтобы перепрошить устройство, нажмите на поле выбора файла и выберите файл прошивки с расширением <code>.bin</code>, при этом кнопка <code>Upload</code> активируется.
+Нажмите кнопку <code>Upload</code> и после подтверждения начнётся загрузка прошивки с индикацией в процентах.</p>
+<p>После успешного завершения устройство автоматически перезагрузится с новой прошивкой.</p>
+<h2 id="_9">Настройки ретранслятора<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<p>Этот раздел включает:</p>
+<ul>
+<li>Wi-Fi SSID, пароль и режим энергосбережения (SSID и пароль применяются одной операцией)</li>
+<li>Имя устройства (Device Name)</li>
+<li>UTC часы (Clock UTC)</li>
+<li>Широта (Latitude)</li>
+<li>Долгота (Longitude)</li>
+<li>интерактивная карта для выбора обеих координат одним кликом или перетаскиванием маркера</li>
+<li>выходную мощность передатчика с аппаратным пределом конкретной платы и пересчётом для встроенного PA, если он установлен</li>
+<li>Гостевой пароль (Guest Password)</li>
+<li>Приватный ключ (Private Key)</li>
+<li>Интервал объявлений (Advert Interval)</li>
+<li>Интервал массовой рассылки (Flood Interval)</li>
+<li>Макс. массовых сообщений (Flood Max)</li>
+<li>Информация о владельце (Owner Info)</li>
+</ul>
+<p>Примечания:</p>
+<ul>
+<li><code>Latitude</code> и <code>Longitude</code> по умолчанию равны <code>0.0</code> как заполнители</li>
+<li>кнопка <code>Save coordinates</code> сохраняет широту и долготу последовательно после проверки диапазона</li>
+<li>для высокомощной Heltec V4 веб-панель позволяет задать оценочную выходную мощность платы от <code>3</code> до аппаратного максимума <code>28 dBm</code>; внутри это преобразуется в <code>-9..16 dBm</code> для SX1262 с учётом усиления PA около <code>12 dB</code></li>
+<li>региональные ограничения мощности и EIRP веб-панель не применяет; соблюдение местных требований остаётся на операторе</li>
+<li>изменение приватного ключа требует перезагрузки для применения</li>
+<li>кнопки обновления загружают текущее значение с ретранслятора</li>
+<li>кнопки сохранения немедленно отправляют соответствующую команду CLI</li>
+</ul>
+<h2 id="ghost-node-mode">Режим скрытого узла (Ghost Node Mode)<a class="headerlink" href="#ghost-node-mode" title="Permanent link">&para;</a></h2>
+<p>Режим скрытого узла — это удобный элемент управления на <code>/app</code> для ретранслятора, который должен оставаться в Wi-Fi и MQTT, но не должен активно вести себя как ещё один близлежащий ретранслятор.</p>
+<p>Типичный сценарий использования:</p>
+<ul>
+<li>комнатный или расположенный рядом MQTT-наблюдатель, когда другой ретранслятор поблизости уже выполняет радио-ретрансляцию</li>
+<li>узел, который должен передавать данные MQTT, веб-статус и диагностику, не добавляя лишнего ретрансляционного трафика или объявлений</li>
+</ul>
+<p>При включении Режим скрытого узла:</p>
+<ul>
+<li>выключает <code>repeat</code></li>
+<li>устанавливает <code>advert.interval</code> в <code>0</code></li>
+<li>устанавливает <code>flood.advert.interval</code> в <code>0</code></li>
+<li>оставляет локальную веб-панель и функции MQTT работающими</li>
+</ul>
+<p>При отключении панель восстанавливает предыдущие настройки повтора и объявлений, если они ещё известны из текущей сессии браузера. Если нет, она возвращается к:</p>
+<ul>
+<li><code>repeat on</code></li>
+<li><code>advert.interval 60</code></li>
+<li><code>flood.advert.interval 12</code></li>
+</ul>
+<p>Этот режим полезен, когда нужно, чтобы устройство наблюдало и публиковало данные, а не действовало как дополнительный передающий ретранслятор. Он не создаёт отдельную роль прошивки; это просто сгруппированное сокращение в веб-панели для существующих настроек.</p>
+<h2 id="mqtt">Настройки MQTT<a class="headerlink" href="#mqtt" title="Permanent link">&para;</a></h2>
+<p>Этот раздел включает:</p>
+<ul>
+<li><code>mqtt.iata</code>: выбирается из подготовленного списка.</li>
+<li><code>mqtt.owner</code>: публичный ключ владельца.</li>
+<li><code>mqtt.email</code>: контактный email владельца.</li>
+<li>Переключатели MQTT-брокеров: <code>meshcoretel</code>, <code>letsmesh-eu</code> и <code>letsmesh-us</code>.</li>
+</ul>
+<p><code>UNSET - To be configured</code> — значение по умолчанию для новых установок MQTT ретранслятора, пока не появится реальное сохранённое значение.</p>
+<p>Примечания:</p>
+<ul>
+<li>если <code>mqtt.iata</code> имеет значение <code>UNSET</code>, панель показывает баннер вверху с напоминанием задать его в разделе MQTT Settings</li>
+<li>пока <code>mqtt.iata</code> имеет значение <code>UNSET</code>, включённые MQTT-брокеры не пытаются подключиться</li>
+<li>состояние MQTT-брокер загружается при открытии страницы</li>
+<li>вы можете включать или выключать каждый MQTT-брокер из этой панели</li>
+<li>включить можно не более двух MQTT-брокеров одновременно</li>
+</ul>
+<h2 id="stats_2">Обзор <code>/stats</code><a class="headerlink" href="#stats_2" title="Permanent link">&para;</a></h2>
+<p>Страница статистики загружается отдельно от <code>/app</code> и предназначена для того, чтобы основная страница администратора оставалась легче.</p>
+<p>Страница <code>/stats</code> в настоящее время показывает:</p>
+<ul>
+<li><code>Services</code>: MQTT, web, архив, количество соседей и, если SD-карта смонтирована, ёмкость карты и архива</li>
+<li>опциональную полноширинную сводную карточку <code>Environment</code> на платах, передающих GPS или данные телеметрии окружающей среды</li>
+<li><code>Trends</code>: заряд батареи, свободная память, пакетная активность (RX/TX в виде составного графика), частота ошибок приёма (RX error rate), сигнал, уровень шума, загрузка ядра процессора, температура MCU (с цветовой индикацией теплового порога) и, если включён GPS, спутники; карточки графиков показывают диапазон <code>min</code>/<code>max</code>, подсветка при наведении синхронизирована по всем графикам</li>
+<li><code>Neighbours</code>: текущая таблица соседей с ID, SNR, возрастом последнего приёма и возрастом объявления</li>
+<li><code>Events</code>: события текущей загрузки/сессии</li>
+</ul>
+<p>Для устройств, передающих дополнительную телеметрию, опциональная сводная карточка <code>Environment</code> может показывать текущие значения, такие как состояние GPS-фиксации, широту, долготу, высоту по GPS, напряжение, температуру с датчика, влажность, давление, высоту по давлению и температуру MCU.</p>
+<p>Метрики, не имеющие текущего значения, скрываются, а не показывают строки-заполнители, поэтому карточки меняются в зависимости от устройства и текущего состояния датчиков.</p>
+<p>Индикатор батареи <code>Core</code> предпочитает отображаемый устройством процент заряда, если устройство его предоставляет. На таких устройствах детализация показывает только текущее напряжение батареи в милливольтах. В противном случае отображаемый процент вычисляется из настроенного диапазона напряжения батареи устройства, и этот диапазон показывается в детализации, а не предполагается фиксированный одноэлементный диапазон <code>3000-4200 мВ</code>.</p>
+<p>Графики трендов загружаются последовательно, а не одним большим пакетом:</p>
+<ol>
+<li>сводка / статус</li>
+<li>батарея</li>
+<li>память</li>
+<li>пакетная активность</li>
+<li>частота ошибок приёма</li>
+<li>загрузка ядра процессора</li>
+<li>сигнал</li>
+<li>спутники, когда GPS включён</li>
+</ol>
+<p>Это позволяет снизить потребление памяти как на стороне браузера, так и на устройстве по сравнению с предыдущим внутристраничным просмотром статистики.</p>
+<p>Если <code>web.stats</code> включён и SD-архив смонтирован, тренды могут восстанавливать архивные сводные точки после перезагрузки из последнего снимка на SD. Недавние актуальные точки по-прежнему добавляются из истории в памяти.</p>
+<h3 id="_10">Объём истории статистики<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>Сэмплы статистики собираются раз в минуту.</p>
+<p>Текущие лимиты истории в памяти:</p>
+<table>
+<thead>
+<tr>
+<th>Класс устройства</th>
+<th style="text-align: right;">Лимит сэмплов</th>
+<th style="text-align: right;">Лимит событий</th>
+<th>Период истории</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Без PSRAM</td>
+<td style="text-align: right;"><code>24</code></td>
+<td style="text-align: right;"><code>8</code></td>
+<td>Только недавняя оперативная история</td>
+</tr>
+<tr>
+<td>Менее <code>4 Мб</code> PSRAM</td>
+<td style="text-align: right;"><code>240</code></td>
+<td style="text-align: right;"><code>96</code></td>
+<td>Примерно <code>4</code> часа</td>
+</tr>
+<tr>
+<td>От <code>4 Мб</code> до менее <code>8 Мб</code> PSRAM</td>
+<td style="text-align: right;"><code>480</code></td>
+<td style="text-align: right;"><code>192</code></td>
+<td>Примерно <code>8</code> часов</td>
+</tr>
+<tr>
+<td><code>8 Мб</code> PSRAM или больше</td>
+<td style="text-align: right;"><code>720</code></td>
+<td style="text-align: right;"><code>288</code></td>
+<td>Примерно <code>12</code> часов</td>
+</tr>
+</tbody>
+</table>
+<p>На устройствах с объёмом PSRAM примерно от <code>2 Мб</code> и выше история статистики начинает записываться с момента загрузки, когда <code>web.stats</code> включён, даже если <code>/stats</code> ещё не открывали.</p>
+<p>Для восстановления из архива требуется включённый <code>web.stats</code> и смонтированная SD-карта на платах, которые поддерживают архивацию на MeshCoreTel-firmware.</p>
+<p>Основное назначение SD-карты — позволить ретранслятору сохранять и восстанавливать историю для <code>/stats</code>. Архив хранит файлы снимков <code>.latest</code> для быстрого восстановления и ежедневные файлы <code>.log</code> с датой по UTC для долгосрочной истории. В качестве дополнительной опции эти файлы также можно извлечь и проанализировать на компьютере для более глубокого ручного анализа.</p>
+<p>На устройствах без PSRAM <code>/stats</code> всё ещё может показывать недавние графики, пока активен просмотр статистики, но история меньше и не поддерживает такое же поведение с резервным копированием в архив, как на платах с PSRAM.</p>
+<p>Полезные команды CLI:</p>
+<ul>
+<li><code>set web.stats on</code></li>
+<li><code>set web.stats off</code></li>
+<li><code>get web.stats.status</code></li>
+</ul>
+<h2 id="_11">Использование на мобильных устройствах<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
+<p>Страница адаптивна и должна корректно работать на телефоне.</p>
+<p>На мобильных устройствах:</p>
+<ul>
+<li>кнопки быстрых команд сворачиваются в двухколоночный макет</li>
+<li>верхняя навигация и группы действий остаются компактными и удобными для касаний</li>
+<li>строки ввода остаются пригодными для сенсорного взаимодействия</li>
+<li>карточки трендов перестраиваются в одноколоночные секции, где это необходимо</li>
+</ul>
+<h2 id="_12">Типовые задачи<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
+<h3 id="wi-fi-mqtt">Проверка Wi-Fi и MQTT<a class="headerlink" href="#wi-fi-mqtt" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Откройте панель.</li>
+<li>Нажмите <code>wifi.status</code> в быстрых командах <code>get</code>.</li>
+<li>Нажмите <code>mqtt.status</code> в быстрых командах <code>get</code>.</li>
+<li>Откройте <code>/stats</code> из верхней навигации для просмотра истории статистики.</li>
+</ol>
+<h3 id="_13">Изменение имени устройства<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Отредактируйте <code>Device Name</code>.</li>
+<li>Нажмите <code>Save</code>.</li>
+<li>Проверьте сгенерированную команду и ответ в окне терминала CLI.</li>
+</ol>
+<h3 id="mqtt-owner-email">Обновление MQTT Owner или Email<a class="headerlink" href="#mqtt-owner-email" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Перейдите в <code>MQTT Settings</code>.</li>
+<li>Введите новое значение.</li>
+<li>Нажмите <code>Save</code>.</li>
+<li>Используйте кнопку обновления, если хотите перечитать сохранённое значение с ретранслятора.</li>
+</ol>
+<h3 id="ota_1">Дистанционное обновление прошивки (OTA)<a class="headerlink" href="#ota_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Откройте панель</li>
+<li>Найдите <code>Firmware Update</code> и нажмите на поле выбора файла</li>
+<li>Выберите файл с прошивкой <code>.bin</code></li>
+<li>Нажмите <code>Upload</code> и подтвердите действие</li>
+<li>Дождитесь загрузки прошивки и перезагрузки устройства</li>
+</ol>
+<h3 id="_14">Использование истории статистики<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<ol>
+<li>При необходимости включите статистику командой <code>set web.stats on</code>.</li>
+<li>Откройте <code>/stats</code> из верхней навигации.</li>
+<li>Проверьте <code>Services</code> на предмет состояния архива и среды выполнения.</li>
+<li>Просмотрите <code>Trends</code> для недавней истории графиков.</li>
+<li>Используйте <code>Refresh</code> для перезагрузки страницы статистики.</li>
+</ol>
+<h2 id="_15">Устранение неполадок<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h2>
+<h3 id="_16">Браузер предупреждает о сертификате<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>Это ожидаемо. Панель использует самоподписанный сертификат, сгенерированный для локального использования.</p>
+<h3 id="_17">Не могу открыть страницу<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p>Проверьте:</p>
+<ul>
+<li>подключён ли ретранслятор к Wi-Fi</li>
+<li>IP-адрес из <code>get wifi.status</code></li>
+<li><code>get web.status</code> сообщает, что панель запущена</li>
+<li>ваше устройство / сборка прошивки поддерживает веб-панель</li>
+</ul>
+<h3 id="_18">Панель открывается, но не удаётся войти<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<p>Используйте пароль администратора ретранслятора, а не гостевой пароль.</p>
+<h3 id="mqtt_1">MQTT становится нестабильным при входе<a class="headerlink" href="#mqtt_1" title="Permanent link">&para;</a></h3>
+<p>Веб-панель загружает настройки посекционно, чтобы снизить нагрузку при запуске, но HTTPS всё ещё потребляет внутреннюю память.</p>
+<p>Проверьте:</p>
+<ul>
+<li>сколько MQTT-брокеров включено (один или два)</li>
+<li><code>memory</code> до и после входа</li>
+<li>улучшается ли стабильность после <code>set web off</code></li>
+</ul>
+<p>Для стационарных установок, где время безотказной работы MQTT важнее доступа через браузер, используйте панель кратковременно, а затем снова отключайте её.</p>
+<h3 id="http-https">Открывается HTTP вместо HTTPS<a class="headerlink" href="#http-https" title="Permanent link">&para;</a></h3>
+<p>Ретранслятор перенаправляет простые запросы <code>http://</code> на локальный URL панели <code>https://</code>. Если браузер всё ещё показывает проблему с подключением после перенаправления, откройте <code>https://&lt;repeater-ip&gt;/</code> напрямую и сначала примите предупреждение о самоподписанном сертификате.</p>
+<h3 id="_19">Статистика или настройки не обновляются<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<p>Попробуйте:</p>
+<ul>
+<li>обновить вкладку браузера</li>
+<li>использовать <code>Refresh</code> на <code>/stats</code></li>
+<li>выйти и войти снова</li>
+<li>проверить стабильность Wi-Fi с помощью <code>get wifi.status</code></li>
+</ul>
+<h3 id="stats_3"><code>/stats</code> недоступна<a class="headerlink" href="#stats_3" title="Permanent link">&para;</a></h3>
+<p>Проверьте:</p>
+<ul>
+<li><code>get web.status</code></li>
+<li><code>get web.stats.status</code></li>
+<li>была ли применена команда <code>set web.stats on</code></li>
+</ul>
+<p>Если <code>web.stats</code> выключен, <code>/stats</code> останется отключённой, и запросы истории графиков выполняться не будут.</p>
+<h2 id="_20">Связанная документация<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href=".././custom-cli/">Пользовательские команды CLI</a></li>
+<li><a href=".././releases/">Загрузка и прошивка релизов</a></li>
+<li><a href=".././local-builds/">Локальная сборка с помощью uv</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["content.action.edit","content.code.copy","search.highlight","search.suggest"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Скопировано в буфер","clipboard.copy":"Копировать в буфер","search.result.more.one":"Ещё 1 на этой странице","search.result.more.other":"Ещё # на этой странице","search.result.none":"Совпадений не найдено","search.result.one":"Найдено 1 совпадение","search.result.other":"Найдено совпадений: #","search.result.placeholder":"Начните печатать для поиска","search.result.term.missing":"Отсутствует","select.version":"Выберите версию"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.91a19a9e.min.js"></script>
+      
+    
+  </body>
+</html>

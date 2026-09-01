@@ -1,0 +1,1666 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Документация прошивки Heltec V4 Web Monitor: Wi-Fi, MQTT MeshCoreTel, веб-панель, монитор пакетов и API">
+      
+      
+      
+        <link rel="canonical" href="https://enotikov.github.io/heltec-v4-web-monitor/boards/">
+      
+      
+        <link rel="prev" href="./..">
+      
+      
+        <link rel="next" href="../releases/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../_assets/heltec-v4-web-monitor.svg">
+      <meta name="generator" content="zensical-0.0.32">
+    
+    
+      
+        <title>Сравнение устройств - Heltec V4 Web Monitor</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.53a7feaf.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../_stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,a=__md_scope)=>JSON.parse(t.getItem(a.pathname+"."+e)),__md_set=(e,t,a=localStorage,_=__md_scope)=>{try{a.setItem(_.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Навигация"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="./.." title="Heltec V4 Web Monitor" class="md-header__button md-logo" aria-label="Heltec V4 Web Monitor" data-md-component="logo">
+      
+  <img src="../_assets/heltec-v4-web-monitor.svg" alt="Heltec V4 Web Monitor">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Навигация">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Heltec V4 Web Monitor
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Сравнение устройств
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Переключить на темную тему"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Переключить на темную тему" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Переключить на светлую тему"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Переключить на светлую тему" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Поиск">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Поиск">
+  <button type="button" class="md-search__button">
+    Поиск
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/enotikov/heltec-v4-web-monitor" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enotikov/heltec-v4-web-monitor
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="Heltec V4 Web Monitor" class="md-nav__button md-logo" aria-label="Heltec V4 Web Monitor" data-md-component="logo">
+      
+  <img src="../_assets/heltec-v4-web-monitor.svg" alt="Heltec V4 Web Monitor">
+
+    </a>
+    Heltec V4 Web Monitor
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/enotikov/heltec-v4-web-monitor" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    enotikov/heltec-v4-web-monitor
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Введение
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Устройства
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Устройства
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        С чего начать
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дополнительные критерии
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repeater_mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Устройства repeater_mqtt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#companion_radio_wifi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Устройства companion_radio_wifi с дисплеем
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#companion_radio_wifi_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Бездисплейные устройства companion_radio_wifi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Практические рекомендации
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../releases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Прошивка
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../heltec-v4-web-monitor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Heltec V4 Web Monitor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI-команды
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../web-panel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Веб-панель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Веб-API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local-builds/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cборка
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        С чего начать
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дополнительные критерии
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repeater_mqtt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Устройства repeater_mqtt
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#companion_radio_wifi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Устройства companion_radio_wifi с дисплеем
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#companion_radio_wifi_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Бездисплейные устройства companion_radio_wifi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Практические рекомендации
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+    <a href="https://github.com/enotikov/heltec-v4-web-monitor/edit/main/meshcoretel-docs/boards.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="_1">Сравнение устройств<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Эта страница поможет вам выбрать устройство, а не просто перечислит все технические детали.</p>
+<p>Если вам нужен короткий ответ:</p>
+<ul>
+<li>для установки MQTT-ретранслятора на крышу по принципу «установил и забыл» начните с <code>heltec_v4</code>, <code>heltec_v4_tft</code>, <code>Station_G2</code> или <code>T_Beam_S3_Supreme_SX1262</code></li>
+<li>для Wi-Fi-компаньона, ориентированного на приложение, бездисплейные устройства вполне подходят и зачастую проще</li>
+<li>если вам нужен встроенный экран, которым действительно будут пользоваться, отдавайте предпочтение TFT-платам</li>
+<li>если нужен экономичный экран состояния, выбирайте устройство с электронной бумагой</li>
+</ul>
+<p>Таблицы ниже построены на основе метаданных устройств из PlatformIO в репозитории и флагов сборки их вариантов.</p>
+<ul>
+<li><code>Устройство</code> — это короткое имя, используемое на этой странице сравнения. Имена файлов релизов и команды локальной сборки по-прежнему используют полные имена окружений, например <code>heltec_v4_repeater_mqtt</code>.</li>
+<li><code>Микроконтроллер</code> показывает только семейство чипа. Фактическая рабочая частота может варьироваться в зависимости от окружения и конфигурации устройства.</li>
+<li><code>ОЗУ</code> — встроенная оперативная память микроконтроллера.</li>
+<li><code>PSRAM</code> — дополнительная память на некоторых устройствах. Больше PSRAM обычно означает больше запаса для интерфейса, MQTT и будущих функций.</li>
+<li><code>GPS</code>: <code>✅</code> — присутствует, пусто — отсутствует.</li>
+<li><code>SD</code>: <code>✅</code> — устройство в настоящее время поддерживает архивацию на SD в прошивке MeshCoreTel-firmware, <code>🧪</code> — аппаратно поддерживает TF/microSD, но интеграция для конкретной платы ещё нуждается в проверке, пусто — информация о поддержке SD/архива отсутствует.</li>
+</ul>
+<h2 id="_2">С чего начать<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Выбирайте устройство <code>ESP32-S3</code> с <code>16 Мб</code> флеш-памяти и PSRAM, если вам нужен солидный запас как для MQTT, так и для интерфейса: <code>heltec_v4_tft</code>, <code>heltec_v4</code>, <code>Station_G2</code>, <code>LilyGo_TBeam_1W</code>.</li>
+<li>Выбирайте устройство с TFT, если устройство будет использоваться как персональный компаньон или полевой узел: <code>heltec_v4_tft</code>, <code>heltec_tracker_v2</code>, <code>LilyGo_TDeck</code>, <code>Heltec_T190</code>.</li>
+<li>Выбирайте электронную бумагу, если нужен экран состояния с низким энергопотреблением в режиме ожидания и редким обновлением: <code>Heltec_E213</code>, <code>Heltec_E290</code>, <code>Heltec_Wireless_Paper</code>, <code>ThinkNode_M5</code>.</li>
+<li>Выбирайте бездисплейное устройство, если это преимущественно стационарный MQTT-шлюз и экран не нужен: <code>RAK_3112</code>, <code>Generic_E22</code>, <code>Meshimi</code>, <code>Xiao_C6</code>.</li>
+<li>Выбирайте бездисплейный Wi-Fi-компаньон, если основным интерфейсом всё равно будет приложение на телефоне: <code>RAK_3112_companion_radio_wifi</code>, <code>Xiao_S3_WIO_companion_radio_wifi</code>, <code>Station_G2_companion_radio_wifi</code>.</li>
+<li>Выбирайте устройство с GPS, если важно определение местоположения / мобильное использование: семейство T-Beam, <code>heltec_tracker_v2</code>, <code>Heltec_v3</code>, <code>heltec_v4</code>, <code>Station_G2</code>, <code>ThinkNode_M5</code>.</li>
+<li>Если вам нужны самые консервативные, проверенные временем радиомодули, то устройства с <code>SX1276</code>: <code>LilyGo_TLora_V2_1_1_6</code>, <code>Tbeam_SX1276</code> и <code>Heltec_v2</code>.</li>
+</ul>
+<h2 id="_3">Дополнительные критерии<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>Если вы выбираете между в остальном похожими устройствами, эти параметры могут быть часто важнее одной лишь флеш-памяти.</p>
+<ul>
+<li><code>Конфиг ЦП</code> — рабочая частота, устанавливаемая MeshCore для данного устройства. <code>default</code> означает, что MeshCore не переопределяет стандартную частоту процессора.</li>
+<li><code>Конфиг TX</code> — значение <code>LORA_TX_POWER</code>, заданное в MeshCore, не гарантированная мощность на выходе антенны. Платы с усилителем мощности (PA) или ВЧ-трактом могут выдавать значительно больше, чем указано в настройке.</li>
+<li><code>Питание</code> — как плата реализует управление питанием: <code>ADC batt</code> (батарея через АЦП), <code>PMU</code>, <code>custom 2S</code> (свой 2S), <code>fixed/ext</code> (фиксированное/внешнее) или <code>none</code>.</li>
+<li><code>Особенности</code> — заметные ВЧ или периферийные дополнения, такие как <code>PA/FEM</code>, <code>RF switch</code>, <code>BME280</code>, <code>NeoPixel</code> или <code>ext ant</code> (внешняя антенна).</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Устройство</th>
+<th>Конфиг ЦП</th>
+<th>Конфиг TX</th>
+<th>Питание</th>
+<th>Особенности</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ebyte_EoRa-S3</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>Generic_E22_sx1262</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>Generic_E22_sx1268</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>Heltec_E213</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_E290</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_T190</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>heltec_tracker_v2</td>
+<td>160 MHz</td>
+<td>9 dBm cfg*</td>
+<td>ADC batt</td>
+<td>PA/FEM</td>
+</tr>
+<tr>
+<td>Heltec_v2</td>
+<td>default</td>
+<td>20 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_v3</td>
+<td>80 MHz</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>heltec_v4</td>
+<td>80 MHz</td>
+<td>10 dBm cfg*</td>
+<td>ADC batt</td>
+<td>PA/FEM</td>
+</tr>
+<tr>
+<td>heltec_v4_tft</td>
+<td>80 MHz</td>
+<td>10 dBm cfg*</td>
+<td>ADC batt</td>
+<td>PA/FEM</td>
+</tr>
+<tr>
+<td>Heltec_Wireless_Paper</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_Wireless_Tracker</td>
+<td>80 MHz</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_WSL3</td>
+<td>80 MHz</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>LilyGo_T3S3_sx1262</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>LilyGo_T3S3_sx1276</td>
+<td>default</td>
+<td>20 dBm cfg</td>
+<td>ADC batt</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>LilyGo_TBeam_1W</td>
+<td>default</td>
+<td>22 dBm cfg*</td>
+<td>custom 2S</td>
+<td>PA/FEM</td>
+</tr>
+<tr>
+<td>LilyGo_TDeck</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>LilyGo_Tlora_C6</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>LilyGo_TLora_V2_1_1_6</td>
+<td>default</td>
+<td>20 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>M5Stack_Unit_C6L</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>Meshadventurer_sx1262</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>Meshadventurer_sx1268</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>Meshimi</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td>ext ant</td>
+</tr>
+<tr>
+<td>nibble_screen_connect</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td>NeoPixel</td>
+</tr>
+<tr>
+<td>RAK_3112</td>
+<td>80 MHz</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>Station_G2</td>
+<td>default</td>
+<td>7 dBm cfg*</td>
+<td>fixed/ext</td>
+<td>PA/FEM</td>
+</tr>
+<tr>
+<td>Station_G2_logging</td>
+<td>default</td>
+<td>7 dBm cfg*</td>
+<td>fixed/ext</td>
+<td>PA/FEM</td>
+</tr>
+<tr>
+<td>T_Beam_S3_Supreme_SX1262</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>PMU</td>
+<td>BME280</td>
+</tr>
+<tr>
+<td>Tbeam_SX1262</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>PMU</td>
+<td></td>
+</tr>
+<tr>
+<td>Tbeam_SX1276</td>
+<td>default</td>
+<td>20 dBm cfg</td>
+<td>PMU</td>
+<td></td>
+</tr>
+<tr>
+<td>ThinkNode_M2</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>ThinkNode_M5</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>ADC batt</td>
+<td></td>
+</tr>
+<tr>
+<td>WHY2025_badge</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td></td>
+</tr>
+<tr>
+<td>Xiao_C6</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td>RF switch</td>
+</tr>
+<tr>
+<td>Xiao_S3_WIO</td>
+<td>default</td>
+<td>22 dBm cfg</td>
+<td>none</td>
+<td>RF switch</td>
+</tr>
+</tbody>
+</table>
+<p>* Эти платы используют усилитель мощности (PA), поэтому эффективная выходная мощность может быть значительно выше настроенного значения <code>LORA_TX_POWER</code>.</p>
+<h2 id="repeater_mqtt">Устройства <code>repeater_mqtt</code><a class="headerlink" href="#repeater_mqtt" title="Permanent link">&para;</a></h2>
+<p>В этой таблице перечислены все сборки MQTT-ретранслятора, определённые в <code>variants/eastmesh_mqtt/platformio.ini</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Устройство</th>
+<th>Микроконтроллер</th>
+<th>ОЗУ</th>
+<th>PSRAM</th>
+<th>Флеш</th>
+<th>LoRa</th>
+<th>Дисплей</th>
+<th>GPS</th>
+<th>SD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DIY_ESP32S3_N16R8_E22_Back2back</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Ebyte_EoRa-S3</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>2 Мб</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Generic_E22_sx1262</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Generic_E22_sx1268</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1268</td>
+<td>Нет</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_E213</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>E-paper (2.13")</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_E290</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>E-paper (2.9")</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_T190</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>TFT (ST7789)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>heltec_tracker_v2</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>TFT (ST7735)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_v2</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1276</td>
+<td>OLED (SSD1306)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_v3</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>heltec_v4</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>2 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>heltec_v4_tft</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>2 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>TFT (ST7789)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_Wireless_Paper</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>E-paper (2.13")</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_Wireless_Tracker</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>TFT (ST7735)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_WSL3</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>LilyGo_T3S3_sx1262</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>2 Мб</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td></td>
+<td>🧪</td>
+</tr>
+<tr>
+<td>LilyGo_T3S3_sx1276</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>2 Мб</td>
+<td>4 Мб</td>
+<td>SX1276</td>
+<td>OLED (SSD1306)</td>
+<td></td>
+<td>🧪</td>
+</tr>
+<tr>
+<td>LilyGo_TBeam_1W</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>LilyGo_TDeck</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>TFT (ST7789)</td>
+<td>✅</td>
+<td>🧪</td>
+</tr>
+<tr>
+<td>LilyGo_Tlora_C6</td>
+<td>ESP32C6</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>M5Stack_Unit_C6L</td>
+<td>ESP32C6</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Meshadventurer_sx1262</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Meshadventurer_sx1268</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1268</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Meshimi</td>
+<td>ESP32C6</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>nibble_screen_connect</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>RAK_3112</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Station_G2</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Station_G2_logging</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>T_Beam_S3_Supreme_SX1262</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Tbeam_SX1262</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Tbeam_SX1276</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1276</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>ThinkNode_M2</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ThinkNode_M5</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>E-paper (GxEPD)</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>WHY2025_badge</td>
+<td>ESP32C6</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Xiao_C6</td>
+<td>ESP32C6</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Xiao_S3_WIO</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>Нет</td>
+<td>✅</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Примечания по SD:</p>
+<ul>
+<li><code>✅</code> — устройство в настоящее время поддерживает архивацию на SD в прошивке MeshCoreTel-firmware.</li>
+<li><code>🧪</code> — аппаратно устройство, вероятно, поддерживает TF/microSD, но интеграция в прошивке MeshCoreTel-firmware ещё нуждается в проверке, прежде чем считать функцию поддерживаемой.</li>
+<li>Для текущего архива статистики достаточно карты microSD <code>4 ГБ</code> с <code>FAT32</code>. Карты большего объёма также поддерживаются.</li>
+</ul>
+<h2 id="companion_radio_wifi">Устройства <code>companion_radio_wifi</code> с дисплеем<a class="headerlink" href="#companion_radio_wifi" title="Permanent link">&para;</a></h2>
+<p>Это варианты сборки Wi-Fi-компаньона, у которых настроен дисплей для локального статуса, помощи при настройке или периодического прямого взаимодействия.</p>
+<table>
+<thead>
+<tr>
+<th>Устройство</th>
+<th>Микроконтроллер</th>
+<th>ОЗУ</th>
+<th>PSRAM</th>
+<th>Флеш</th>
+<th>LoRa</th>
+<th>Дисплей</th>
+<th>GPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Heltec_v2</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1276</td>
+<td>OLED (SSD1306)</td>
+<td></td>
+</tr>
+<tr>
+<td>Heltec_v3</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>heltec_tracker_v2</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>TFT (ST7735)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>heltec_v4</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>2 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>heltec_v4_tft</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>2 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>TFT (ST7789)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>LilyGo_TBeam_1W</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>LilyGo_TLora_V2_1_1_6</td>
+<td>ESP32</td>
+<td>520 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1276</td>
+<td>OLED (SSD1306)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>nibble_screen_connect</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SSD1306)</td>
+<td></td>
+</tr>
+<tr>
+<td>Station_G2</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>16 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>T_Beam_S3_Supreme_SX1262</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>8 Мб</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>ThinkNode_M2</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>OLED (SH1106)</td>
+<td></td>
+</tr>
+<tr>
+<td>ThinkNode_M5</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>4 Мб</td>
+<td>SX1262</td>
+<td>E-paper (GxEPD)</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h2 id="companion_radio_wifi_1">Бездисплейные устройства <code>companion_radio_wifi</code><a class="headerlink" href="#companion_radio_wifi_1" title="Permanent link">&para;</a></h2>
+<p>Это варианты сборки Wi-Fi-компаньона, которые полагаются на сопутствующее приложение как на основной интерфейс. Для многих пользователей это лучший повседневный вариант.</p>
+<table>
+<thead>
+<tr>
+<th>Устройство</th>
+<th>Микроконтроллер</th>
+<th>ОЗУ</th>
+<th>PSRAM</th>
+<th>Флеш</th>
+<th>LoRa</th>
+<th>GPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Heltec_WSL3</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>RAK_3112</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Xiao_S3_WIO</td>
+<td>ESP32S3</td>
+<td>512 Кб</td>
+<td>Нет</td>
+<td>8 Мб</td>
+<td>SX1262</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">Практические рекомендации<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Лучший универсальный MQTT-ретранслятор с экраном и хорошим запасом ресурсов: <code>heltec_v4_repeater_mqtt</code>, <code>heltec_v4_tft_repeater_mqtt</code>, <code>Station_G2_repeater_mqtt</code>, <code>LilyGo_TBeam_1W_repeater_mqtt</code>.</li>
+<li>Лучший MQTT-ретранслятор для простой бездисплейной установки: <code>RAK_3112_repeater_mqtt</code>, <code>Generic_E22_sx1262_repeater_mqtt</code>, <code>Meshimi_repeater_mqtt</code>, <code>Xiao_C6_repeater_mqtt</code>.</li>
+<li>Лучшие сборки MQTT с экономичным дисплеем: <code>Heltec_E213_repeater_mqtt</code>, <code>Heltec_E290_repeater_mqtt</code>, <code>Heltec_Wireless_Paper_repeater_mqtt</code>, <code>ThinkNode_M5_Repeater_mqtt</code>.</li>
+<li>Лучший выбор компаньона для максимально богатого локального интерфейса: <code>heltec_v4_tft_companion_radio_wifi</code> и <code>heltec_tracker_v2_companion_radio_wifi</code>.</li>
+<li>Лучший выбор компаньона с максимальным запасом памяти: <code>T_Beam_S3_Supreme_SX1262_companion_radio_wifi</code>, <code>Station_G2_companion_radio_wifi</code>, <code>LilyGo_TBeam_1W_companion_radio_wifi</code>.</li>
+<li>Лучший выбор компаньона, если вас устраивает работа в основном через приложение и бездисплейная конфигурация: <code>RAK_3112_companion_radio_wifi</code>, <code>Xiao_S3_WIO_companion_radio_wifi</code>, <code>Station_G2_companion_radio_wifi</code>.</li>
+<li>Лучший выбор компаньона, если вы предпочитаете OLED вместо TFT: <code>T_Beam_S3_Supreme_SX1262_companion_radio_wifi</code>, <code>heltec_v4_companion_radio_wifi</code>, <code>LilyGo_TBeam_1W_companion_radio_wifi</code>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["content.action.edit","content.code.copy","search.highlight","search.suggest"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Скопировано в буфер","clipboard.copy":"Копировать в буфер","search.result.more.one":"Ещё 1 на этой странице","search.result.more.other":"Ещё # на этой странице","search.result.none":"Совпадений не найдено","search.result.one":"Найдено 1 совпадение","search.result.other":"Найдено совпадений: #","search.result.placeholder":"Начните печатать для поиска","search.result.term.missing":"Отсутствует","select.version":"Выберите версию"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.91a19a9e.min.js"></script>
+      
+    
+  </body>
+</html>
