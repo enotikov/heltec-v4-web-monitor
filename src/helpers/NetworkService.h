@@ -23,6 +23,7 @@ public:
 
   bool setWifiSSID(const char* ssid);
   bool setWifiPassword(const char* pwd);
+  bool setWifiCredentials(const char* ssid, const char* pwd);
   const char* getWifiSSID() const { return _prefs.wifi_ssid; }
   bool setWifiPowerSave(const char* mode);
   const char* getWifiPowerSave() const;
@@ -47,5 +48,6 @@ private:
   bool _sntp_started;
   bool _have_time_sync;
   unsigned long _last_wifi_attempt;
+  unsigned long _wifi_reconnect_at;
   time_t        _last_time_sync;
 };

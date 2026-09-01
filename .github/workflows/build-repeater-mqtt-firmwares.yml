@@ -1,4 +1,4 @@
-name: Build Repeater MQTT Firmwares
+name: Build Heltec V4 Web Monitor Release
 
 permissions:
   contents: write
@@ -24,20 +24,20 @@ jobs:
       - name: Setup Build Environment
         uses: ./.github/actions/setup-build-environment
 
-      - name: Build Firmwares
-        run: /usr/bin/env bash build.sh build-repeater-mqtt-firmwares
+      - name: Build Heltec V4 Firmware
+        run: /usr/bin/env bash build.sh build-firmware heltec_v4_repeater_mqtt
 
       - name: Upload Workflow Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: repeater-mqtt-firmwares
+          name: heltec-v4-web-monitor-firmware
           path: out
 
       - name: Create Release
         uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          name: Repeater ${{ env.RELEASE_VERSION }}
+          name: Heltec V4 Web Monitor ${{ env.RELEASE_VERSION }}
           body: ""
           draft: true
           files: out/*

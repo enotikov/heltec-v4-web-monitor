@@ -1,8 +1,10 @@
-# Прошивка MeshCore-репитеров с WEB и MQTT
+# Heltec V4 Web Monitor
 
-Это форк прошивки [MeshCore-EastMesh](https://github.com/xJARiD/MeshCore-EastMesh), в котором поддержка австралийского сервиса телеметрии EastMesh AU заменена на поддержку сервиса [MeshCoreTel](https://meshcoretel.ru/), а также выполнен ряд других доработок и адаптация.
+Прошивка MeshCore-репитера для высокомощной Heltec WiFi LoRa 32 V4/V4.3 с локальной веб-панелью, монитором пакетов, картой узлов и поддержкой [MeshCoreTel](https://meshcoretel.ru/).
 
-В остальном прошивка базируется на официальных версиях прошивок МеshCore. Благодарность Scott Powell / Ripple Radios и всем контрибьюторам MeshCore за оригинальную прошивку и основу проекта, а также Jared Dohrman за доработки, выполненные в рамках EastMesh.
+Проект основан на [VBart/MeshCoreTel-firmware](https://github.com/VBart/MeshCoreTel-firmware), который, в свою очередь, развивает [MeshCore-EastMesh](https://github.com/xJARiD/MeshCore-EastMesh) и заменяет поддержку EastMesh AU на MeshCoreTel. Изменения этого репозитория сосредоточены на веб-мониторинге и управлении Heltec V4.
+
+В основе лежат официальные версии [MeshCore](https://github.com/meshcore-dev/MeshCore). Благодарность Scott Powell / Ripple Radios и всем контрибьюторам MeshCore за оригинальную прошивку, Jared Dohrman за EastMesh и VBart за интеграцию MeshCoreTel и базовую веб-панель.
 
 ## Ключевые особенности прошивки
 
@@ -41,15 +43,33 @@
 - изменение основных настроек репитера и MQTT через веб-интерфейс
 - сгруппированные быстрые действия
 - вся ключевая статистика по репитеру
-- список последних услышанных соседий с показателями качества сигнала
+- список последних услышанных соседей с показателями качества сигнала
 - хранение истории показателей за последние несколько часов (только на устройствах с PSRAM)
+- живой монитор RX/TX-пакетов с фильтрами, CSV-экспортом и подробной карточкой метаданных
+- карта проверенных advert-узлов и трёхсекундная визуализация движения пакетов
+- выбор координат репитера точкой на карте
+- настройка аппаратно ограниченной выходной мощности передатчика на поддерживаемых платах
 - безопасное обновление прошивки по HTTPS
 - подгружаемые через API радио-пресеты и IATA-коды
 - светлая и тёмная темы
 - возможность отключения командой `set web off`
 - адаптация для мобильных устройств
 
-Подробнее в документации: [Использование веб-панели ретранслятора](https://vbart.github.io/MeshCoreTel-firmware/web-panel/)
+Подробнее в документации: [Использование веб-панели ретранслятора](https://enotikov.github.io/heltec-v4-web-monitor/web-panel/)
+
+### Расширенная сборка Heltec V4
+
+Для высокомощной Heltec WiFi LoRa 32 V4/V4.3 с OLED доступна расширенная страница `/packets`:
+
+- кольцевой журнал 128 последних RX/TX/TX-failed записей без сохранения зашифрованного payload;
+- подробности пакета по нажатию на строку;
+- проверенные узлы только из корректно обработанных advert;
+- до 128 точек, сохраняемых в RAM до перезагрузки без вытеснения ранее найденных узлов;
+- линии пакетов длительностью три секунды;
+- фиксированный пользователем масштаб карты после первого автоматического обзора;
+- оценочная выходная мощность высокомощной платы `3…28 dBm` без встроенного регионального ограничения.
+
+Полное руководство, ограничения и инструкции по OTA/USB: [Heltec V4: веб-панель и монитор пакетов](https://enotikov.github.io/heltec-v4-web-monitor/heltec-v4-web-monitor/).
 
 ### Веб-API по HTTPS
 
@@ -63,26 +83,27 @@
 
 Данный API может быть использован для мониторинга с хранением долгосрочной истории (например с использованием таких инструментов как Prometheus и Grafana), а также автонастройки и управления устройством с помощью скриптов.
 
-Подробнее в документации: [Использование веб-API ретранслятора](https://vbart.github.io/MeshCoreTel-firmware/api/)
+Подробнее в документации: [Использование веб-API ретранслятора](https://enotikov.github.io/heltec-v4-web-monitor/api/)
 
 ## Релизы
 
 Готовые прошивки публикуются на GitHub Releases:
 
-- <https://github.com/VBart/MeshCoreTel-firmware/releases>
+- <https://github.com/enotikov/heltec-v4-web-monitor/releases>
 
-А также доступны в веб-прошивальщике от MeshCoreTel:
+Сборки upstream также доступны в веб-прошивальщике MeshCoreTel:
 
-- <https://meshcoretel.ru/ru/flasher>  (под заголовком _Прошивки наблюдателя от VBart_)
+- <https://meshcoretel.ru/ru/flasher> (раздел прошивок VBart; наличие именно этой расширенной сборки необходимо проверять по названию и версии)
 
 ## Документация
 
-- <https://vbart.github.io/MeshCoreTel-firmware/>
+- <https://enotikov.github.io/heltec-v4-web-monitor/>
 
 Основные разделы пользовательского руководства:
 
-- [Сравнение устройств](https://vbart.github.io/MeshCoreTel-firmware/boards/)
-- [Загрузка и прошивка релизов](https://vbart.github.io/MeshCoreTel-firmware/releases/)
-- [Использование веб-панели ретранслятора](https://vbart.github.io/MeshCoreTel-firmware/web-panel/)
-- [Использование веб-API ретранслятора](https://vbart.github.io/MeshCoreTel-firmware/api/)
-- [Пользовательские команды CLI](https://vbart.github.io/MeshCoreTel-firmware/custom-cli/)
+- [Сравнение устройств](https://enotikov.github.io/heltec-v4-web-monitor/boards/)
+- [Загрузка и прошивка релизов](https://enotikov.github.io/heltec-v4-web-monitor/releases/)
+- [Heltec V4: веб-панель и монитор пакетов](https://enotikov.github.io/heltec-v4-web-monitor/heltec-v4-web-monitor/)
+- [Использование веб-панели ретранслятора](https://enotikov.github.io/heltec-v4-web-monitor/web-panel/)
+- [Использование веб-API ретранслятора](https://enotikov.github.io/heltec-v4-web-monitor/api/)
+- [Пользовательские команды CLI](https://enotikov.github.io/heltec-v4-web-monitor/custom-cli/)

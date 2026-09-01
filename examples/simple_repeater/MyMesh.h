@@ -40,6 +40,9 @@
 #include <helpers/StatsHistory.h>
 #include <helpers/StaticPoolPacketManager.h>
 #include <helpers/StatsFormatHelper.h>
+#if defined(ESP_PLATFORM) && WITH_WEB_PANEL
+#include <helpers/web/PacketLog.h>
+#endif
 #include <helpers/TxtDataHelpers.h>
 #include <helpers/RegionMap.h>
 #include "RateLimiter.h"
@@ -177,6 +180,7 @@ class MyMesh : public mesh::Mesh, public CommonCLICallbacks, public WebPanelComm
 #endif
 #if defined(ESP_PLATFORM) && WITH_WEB_PANEL
   WebService web;
+  WebPacketLog _packet_log;
 #endif
 #if defined(ESP32)
   CPUUsageTracker _cpu_tracker;
@@ -317,6 +321,8 @@ public:
   bool isWebStatsEnabled() const override;
   bool formatWebStatsSummaryJson(char* reply, size_t reply_size) override;
   bool formatWebStatsSeriesJson(const char* series, char* reply, size_t reply_size) override;
+  bool formatWebPacketLogJson(char* reply, size_t reply_size, uint32_t since_sequence, size_t limit,
+                              bool include_nodes) override;
   void loop();
 
 #if defined(WITH_BRIDGE)

@@ -479,3 +479,33 @@ releases:
         area: web-panel
         text: "Updated the web panel and custom CLI docs to note the OTA redirect fallback on older builds and to describe the consistent `start ota` handling across command sources."
     breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.4.0"
+    tag: "repeater-mqtt-meshcoretel-v1.4.0"
+    date: "2026-09-01"
+    previous_version: "1.3.11"
+    summary: "Adds an interactive packet monitor and node map, map-based repeater coordinates, board-aware Heltec V4 TX power controls, and safer Wi-Fi configuration in the local web panel."
+    changes:
+      - type: added
+        area: packet-monitor
+        text: "Added `/packets` with a 128-entry in-memory RX/TX/TX-failed metadata log, filters, live updates, CSV export, and per-packet detail dialogs."
+      - type: added
+        area: map
+        text: "Added a Leaflet/OpenStreetMap packet map with verified advert nodes, inferred path hops, three-second packet animations, and a viewport that remains under user control after initial fitting."
+      - type: added
+        area: map
+        text: "Added a 128-node Heltec V4 verified advert registry that retains known coordinates without eviction until the board reboots and is not cleared with the packet ring buffer."
+      - type: added
+        area: web-panel
+        text: "Added a map picker for repeater coordinates and an atomic Wi-Fi credentials update path."
+      - type: added
+        area: radio
+        text: "Added board-output TX power control for high-power Heltec V4 builds, capped at the board hardware maximum of 28 dBm and translated to the SX1262 drive level."
+      - type: added
+        area: api
+        text: "Added `/api/packets` plus `get web.packets.status`, `clear web.packets`, `get web.tx`, and `set web.tx` integration for the web panel."
+      - type: docs
+        area: docs
+        text: "Added a detailed Heltec V4 web monitor guide covering hardware scope, OTA and USB installation, first setup, packet interpretation, security, limitations, and troubleshooting."
+    breaking_changes: []

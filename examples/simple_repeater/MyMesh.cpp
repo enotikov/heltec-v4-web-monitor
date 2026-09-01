@@ -345,6 +345,16 @@ void escapeJsonString(const char* input, char* output, size_t output_size) {
 #ifndef LORA_TX_POWER
   #define LORA_TX_POWER 20
 #endif
+#ifndef WEB_TX_POWER_BOOST_DB
+  #define WEB_TX_POWER_BOOST_DB 0
+#endif
+#ifndef WEB_TX_POWER_OUTPUT_MAX
+  #ifdef MAX_LORA_TX_POWER
+    #define WEB_TX_POWER_OUTPUT_MAX (MAX_LORA_TX_POWER + WEB_TX_POWER_BOOST_DB)
+  #else
+    #define WEB_TX_POWER_OUTPUT_MAX (22 + WEB_TX_POWER_BOOST_DB)
+  #endif
+#endif
 
 #ifndef ADVERT_NAME
   #define ADVERT_NAME "repeater"
@@ -810,6 +820,12 @@ void MyMesh::logRx(mesh::Packet *pkt, int len, float score) {
   mqtt.publishPacket(*pkt, false, (int)_radio->getLastRSSI(), _radio->getLastSNR(), (int)(score * 1000),
                      (int)_radio->getEstAirtimeFor(len));
 #endif
+#if defined(ESP_PLATFORM) && WITH_WEB_PANEL
+  _packet_log.record(*pkt, WebPacketDirection::Rx, getRTCClock()->getCurrentTime(),
+                     static_cast<uint32_t>(uptime_millis), len, static_cast<int>(_radio->getLastRSSI()),
+                     _radio->getLastSNR(), static_cast<int>(score * 1000),
+                     static_cast<int>(_radio->getEstAirtimeFor(len)), true);
+#endif
 
   if (_logging) {
     File f = openAppend(PACKET_LOG_FILE);
@@ -839,6 +855,11 @@ void MyMesh::logTx(mesh::Packet *pkt, int len) {
 #ifdef WITH_MQTT_UPLINK
   mqtt.publishPacket(*pkt, true, (int)_radio->getLastRSSI(), _radio->getLastSNR());
 #endif
+#if defined(ESP_PLATFORM) && WITH_WEB_PANEL
+  _packet_log.record(*pkt, WebPacketDirection::Tx, getRTCClock()->getCurrentTime(),
+                     static_cast<uint32_t>(uptime_millis), len, 0, 0.0f, -1,
+                     static_cast<int>(_radio->getEstAirtimeFor(len)), false);
+#endif
 
   if (_logging) {
     File f = openAppend(PACKET_LOG_FILE);
@@ -859,6 +880,10 @@ void MyMesh::logTx(mesh::Packet *pkt, int len) {
 }
 
 void MyMesh::logTxFail(mesh::Packet *pkt, int len) {
+#if defined(ESP_PLATFORM) && WITH_WEB_PANEL
+  _packet_log.record(*pkt, WebPacketDirection::TxFailed, getRTCClock()->getCurrentTime(),
+                     static_cast<uint32_t>(uptime_millis), len, 0, 0.0f, -1, 0, false);
+#endif
   if (_logging) {
     File f = openAppend(PACKET_LOG_FILE);
     if (f) {
@@ -972,6 +997,15 @@ static bool isShare(const mesh::Packet *packet) {
 void MyMesh::onAdvertRecv(mesh::Packet *packet, const mesh::Identity &id, uint32_t timestamp,
                           const uint8_t *app_data, size_t app_data_len) {
   mesh::Mesh::onAdvertRecv(packet, id, timestamp, app_data, app_data_len); // chain to super impl
+
+#if defined(ESP_PLATFORM) && WITH_WEB_PANEL
+  AdvertDataParser web_parser(app_data, app_data_len);
+  if (web_parser.isValid()) {
+    _packet_log.rememberVerifiedAdvert(*packet, id, timestamp, web_parser.getType(),
+                                      web_parser.hasName() ? web_parser.getName() : "",
+                                      web_parser.hasLatLon(), web_parser.getIntLat(), web_parser.getIntLon());
+  }
+#endif
 
   // if this a zero hop advert (and not via 'Share'), add it to neighbours
   if (packet->getPathHashCount() == 0 && !isShare(packet)) {
@@ -1330,6 +1364,7 @@ void MyMesh::begin(FILESYSTEM *fs, ArchiveStorage* archive) {
 #endif
 #if defined(ESP_PLATFORM) && WITH_WEB_PANEL
   board.setInhibitSleep(true);
+  _packet_log.begin();
   web.setCommandRunner(this);
   web.setNetworkStateProvider(&network);
   web.begin(_fs);
@@ -2178,6 +2213,34 @@ void MyMesh::handleCommand(uint32_t sender_timestamp, char *command, char *reply
              static_cast<unsigned>(_stats_history.getEventCount()),
              static_cast<unsigned>(_stats_history.getEventCapacity()),
              (_archive != nullptr && _archive->isMounted()) ? "mounted" : "unavailable");
+  } else if (strcmp(command, "get web.packets.status") == 0) {
+    snprintf(reply, 160, "> available:%s entries:%u/%u dropped:%lu",
+             _packet_log.isAvailable() ? "yes" : "no",
+             static_cast<unsigned>(_packet_log.getCount()),
+             static_cast<unsigned>(_packet_log.getCapacity()),
+             static_cast<unsigned long>(_packet_log.getDroppedCount()));
+  } else if (strcmp(command, "clear web.packets") == 0) {
+    strcpy(reply, _packet_log.clear() ? "OK - web packet log cleared" : "Err - packet log unavailable");
+  } else if (strcmp(command, "get web.tx") == 0) {
+    const int output_power = static_cast<int>(_prefs.tx_power_dbm) + static_cast<int>(WEB_TX_POWER_BOOST_DB);
+    snprintf(reply, 160, "> current:%d min:%d max:%d boost:%d radio:%d",
+             output_power, -9 + static_cast<int>(WEB_TX_POWER_BOOST_DB),
+             static_cast<int>(WEB_TX_POWER_OUTPUT_MAX), static_cast<int>(WEB_TX_POWER_BOOST_DB),
+             static_cast<int>(_prefs.tx_power_dbm));
+  } else if (memcmp(command, "set web.tx ", 11) == 0) {
+    char* end = nullptr;
+    const long requested = strtol(&command[11], &end, 10);
+    const long radio_power = requested - static_cast<long>(WEB_TX_POWER_BOOST_DB);
+    while (end != nullptr && *end == ' ') end++;
+    if (end == nullptr || *end != 0 || radio_power < -9 || requested > WEB_TX_POWER_OUTPUT_MAX) {
+      snprintf(reply, 160, "Err - board TX power must be %d..%d dBm",
+               -9 + static_cast<int>(WEB_TX_POWER_BOOST_DB), static_cast<int>(WEB_TX_POWER_OUTPUT_MAX));
+    } else {
+      _prefs.tx_power_dbm = static_cast<int8_t>(radio_power);
+      savePrefs();
+      setTxPower(_prefs.tx_power_dbm);
+      snprintf(reply, 160, "OK - board output %ld dBm, radio drive %ld dBm", requested, radio_power);
+    }
 #endif
 #if defined(TBEAM_1W)
   } else if (strcmp(command, "get fan") == 0) {
@@ -2260,6 +2323,18 @@ void MyMesh::handleCommand(uint32_t sender_timestamp, char *command, char *reply
     }
 #endif
 #if defined(ESP_PLATFORM)
+  } else if (memcmp(command, "set wifi.credentials ", 21) == 0) {
+    char* ssid = &command[21];
+    char* separator = strchr(ssid, '\t');
+    if (separator == nullptr) {
+      strcpy(reply, "Err - expected SSID and password");
+    } else {
+      *separator = 0;
+      const char* password = separator + 1;
+      strcpy(reply, network.setWifiCredentials(ssid, password)
+                        ? "OK - WiFi credentials saved; reconnecting"
+                        : "Err - bad WiFi credentials");
+    }
   } else if (memcmp(command, "set wifi.ssid ", 14) == 0) {
     if (network.setWifiSSID(&command[14])) {
       strcpy(reply, "OK");
@@ -2655,6 +2730,23 @@ bool MyMesh::formatWebStatsSeriesJson(const char* series, char* reply, size_t re
       static_cast<uint32_t>(uptime_millis / 1000));
 #else
   (void)series;
+  if (reply != nullptr && reply_size > 0) {
+    reply[0] = 0;
+  }
+  return false;
+#endif
+}
+
+bool MyMesh::formatWebPacketLogJson(char* reply, size_t reply_size, uint32_t since_sequence, size_t limit,
+                                    bool include_nodes) {
+#if defined(ESP_PLATFORM) && WITH_WEB_PANEL
+  return _packet_log.formatJson(reply, reply_size, since_sequence, limit, include_nodes, self_id,
+                                _prefs.node_name, static_cast<int32_t>(_prefs.node_lat * 1000000.0),
+                                static_cast<int32_t>(_prefs.node_lon * 1000000.0));
+#else
+  (void)since_sequence;
+  (void)limit;
+  (void)include_nodes;
   if (reply != nullptr && reply_size > 0) {
     reply[0] = 0;
   }

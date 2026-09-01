@@ -44,7 +44,8 @@ const char* getWifiQualityLabel(int rssi_dbm) {
 }  // namespace
 
 NetworkService::NetworkService()
-    : _fs(nullptr), _prefs{}, _wifi_started(false), _sntp_started(false), _have_time_sync(false), _last_wifi_attempt(0), _last_time_sync(0) {
+    : _fs(nullptr), _prefs{}, _wifi_started(false), _sntp_started(false), _have_time_sync(false), _last_wifi_attempt(0),
+      _wifi_reconnect_at(0), _last_time_sync(0) {
   NetworkPrefsStore::setDefaults(_prefs);
 }
 
@@ -71,6 +72,10 @@ void NetworkService::end() {
 
 void NetworkService::loop(bool network_required) {
 #if defined(ESP_PLATFORM)
+  if (_wifi_reconnect_at != 0 && static_cast<long>(millis() - _wifi_reconnect_at) >= 0) {
+    _wifi_reconnect_at = 0;
+    reconnectWifi();
+  }
   ensureWifi(network_required);
   updateTimeSync();
 #else
@@ -99,6 +104,20 @@ bool NetworkService::setWifiPassword(const char* pwd) {
   StrHelper::strncpy(_prefs.wifi_pwd, pwd, sizeof(_prefs.wifi_pwd));
   bool ok = savePrefs();
   reconnectWifi();
+  return ok;
+}
+
+bool NetworkService::setWifiCredentials(const char* ssid, const char* pwd) {
+  if (ssid == nullptr || pwd == nullptr || ssid[0] == 0 || strlen(ssid) >= sizeof(_prefs.wifi_ssid) ||
+      strlen(pwd) >= sizeof(_prefs.wifi_pwd)) {
+    return false;
+  }
+  StrHelper::strncpy(_prefs.wifi_ssid, ssid, sizeof(_prefs.wifi_ssid));
+  StrHelper::strncpy(_prefs.wifi_pwd, pwd, sizeof(_prefs.wifi_pwd));
+  const bool ok = savePrefs();
+  if (ok) {
+    _wifi_reconnect_at = millis() + 1000;
+  }
   return ok;
 }
 
@@ -204,6 +223,7 @@ void NetworkService::reconnectWifi() {
   _sntp_started = false;
   _have_time_sync = false;
   _last_wifi_attempt = 0;
+  _wifi_reconnect_at = 0;
 }
 
 bool NetworkService::isWifiConnected() const {

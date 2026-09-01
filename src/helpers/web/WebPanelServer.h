@@ -32,6 +32,16 @@ public:
     }
     return false;
   }
+  virtual bool formatWebPacketLogJson(char* reply, size_t reply_size, uint32_t since_sequence, size_t limit,
+                                      bool include_nodes) {
+    (void)since_sequence;
+    (void)limit;
+    (void)include_nodes;
+    if (reply != nullptr && reply_size > 0) {
+      reply[0] = 0;
+    }
+    return false;
+  }
 };
 
 class WebPanelServer {
@@ -66,9 +76,11 @@ private:
   static esp_err_t handleHttpRedirect(httpd_req_t* req);
   static esp_err_t handleApp(httpd_req_t* req);
   static esp_err_t handleStatsPage(httpd_req_t* req);
+  static esp_err_t handlePacketsPage(httpd_req_t* req);
   static esp_err_t handleLogin(httpd_req_t* req);
   static esp_err_t handleCommand(httpd_req_t* req);
   static esp_err_t handleStats(httpd_req_t* req);
+  static esp_err_t handlePackets(httpd_req_t* req);
   static esp_err_t handleOtaRedirect(httpd_req_t* req);
   static esp_err_t handleOtaUpload(httpd_req_t* req);
 

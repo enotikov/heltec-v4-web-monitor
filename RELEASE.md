@@ -59,6 +59,8 @@ Example:
 7. Review the draft GitHub Releases.
 8. Publish the release.
 
+For the currently prepared first release in `enotikov/heltec-v4-web-monitor`, use `RELEASE_NOTES_v1.4.0.md` as the draft release description and preflight checklist. The release tag remains `repeater-mqtt-meshcoretel-v1.4.0` for compatibility with the inherited build workflow; its upstream base is MeshCore `v1.16.0`.
+
 If `release-notes.yml` should reflect the tagged firmware release in-repo, make that change before the PR to `main` so the tagged commit already contains the matching release notes.
 
 Example:

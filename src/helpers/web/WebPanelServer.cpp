@@ -20,6 +20,9 @@ namespace {
 #ifndef WEB_PANEL_IDLE_TIMEOUT_MS
   #define WEB_PANEL_IDLE_TIMEOUT_MS (15UL * 60UL * 1000UL)
 #endif
+#ifndef WEB_PACKETS_REPLY_BUFFER_SIZE
+  #define WEB_PACKETS_REPLY_BUFFER_SIZE (20 * 1024)
+#endif
 
 constexpr size_t kWebServerStackSize = WEB_PANEL_STACK_SIZE;
 constexpr size_t kWebPasswordBufferSize = 80;
@@ -27,6 +30,7 @@ constexpr size_t kWebCommandBufferSize = 192;
 constexpr size_t kWebReplyBufferSize = 256;
 constexpr size_t kWebStatsQueryBufferSize = 96;
 constexpr size_t kWebStatsReplyBufferSize = 4608;
+constexpr size_t kWebPacketsReplyBufferSize = WEB_PACKETS_REPLY_BUFFER_SIZE;
 constexpr size_t kWebPageChunkSize = MBEDTLS_SSL_OUT_CONTENT_LEN;
 constexpr unsigned long kWebIdleTimeoutMs = WEB_PANEL_IDLE_TIMEOUT_MS;
 
@@ -292,7 +296,8 @@ const char kWebPanelLoginHtml[] PROGMEM = R"HTML(
     function getPreferredPage() {
       const params = new URLSearchParams(window.location.search);
       const next = params.get("next");
-      return next === "/stats" ? "/stats" : "/app";
+      if (next === "/stats" || next === "/packets") return next;
+      return "/app";
     }
     async function login() {
       const pwd = document.getElementById("password").value;
@@ -362,6 +367,7 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Repeater Config</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     :root {
       color-scheme: light;
@@ -541,11 +547,52 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
     .events-table a:hover { text-decoration:underline; }
     :root[data-theme="dark"] .events-table th { background:rgba(0,0,0,.16); }
     .events-empty { color:var(--text-muted); }
+    .packet-toolbar { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)) auto auto; gap:10px; align-items:end; }
+    .packet-toolbar .field-card { padding:10px; }
+    .packet-table-wrap { margin-top:12px; overflow:auto; max-height:65vh; border:1px solid var(--border); border-radius:12px; }
+    .packet-table { width:100%; border-collapse:collapse; min-width:1050px; }
+    .packet-table th, .packet-table td { padding:9px 10px; text-align:left; font-size:12px; white-space:nowrap; }
+    .packet-table th { position:sticky; top:0; z-index:1; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; background:var(--surface2); }
+    .packet-table td { color:var(--text); border-top:1px solid var(--border); font-variant-numeric:tabular-nums; }
+    .packet-row { cursor:pointer; transition:background .12s ease; }
+    .packet-row:hover, .packet-row:focus { outline:none; background:rgba(47,143,78,.09); }
+    .packet-direction { display:inline-block; min-width:54px; padding:3px 7px; border-radius:999px; text-align:center; font-weight:800; text-transform:uppercase; }
+    .packet-direction.rx { color:#176b3a; background:rgba(54,161,103,.16); }
+    .packet-direction.tx { color:#2557a7; background:rgba(64,126,214,.16); }
+    .packet-direction.tx_fail { color:#a62f2f; background:rgba(221,106,106,.18); }
+    :root[data-theme="dark"] .packet-direction.rx { color:#72d59d; }
+    :root[data-theme="dark"] .packet-direction.tx { color:#8cb8ff; }
+    :root[data-theme="dark"] .packet-direction.tx_fail { color:#ff9b9b; }
+    .packet-summary { display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; color:var(--text-muted); font-size:13px; }
+    .packet-summary strong { color:var(--text); }
+    .map-shell { position:relative; overflow:hidden; min-height:300px; border:1px solid var(--border); border-radius:12px; background:var(--surface1); }
+    .map-shell .leaflet-container { width:100%; height:100%; min-height:300px; font-family:inherit; }
+    .map-fallback { display:none; padding:16px; color:var(--status-red); }
+    .map-legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; color:var(--text-muted); font-size:12px; }
+    .map-legend span::before { content:""; display:inline-block; width:18px; height:3px; margin-right:6px; vertical-align:middle; background:var(--legend-color); }
+    .map-legend .inferred::before { background:repeating-linear-gradient(90deg,var(--legend-color) 0 5px,transparent 5px 8px); }
+    .packet-map-shell { height:390px; margin-bottom:12px; }
+    .packet-flight { stroke-linecap:round; animation:packet-flight-fade 3s linear forwards; }
+    @keyframes packet-flight-fade { 0% { stroke-opacity:.95; stroke-width:5; } 70% { stroke-opacity:.65; } 100% { stroke-opacity:0; stroke-width:1; } }
+    .packet-pulse { animation:packet-pulse-fade 3s ease-out forwards; }
+    @keyframes packet-pulse-fade { 0% { stroke-opacity:1; fill-opacity:.45; } 100% { stroke-opacity:0; fill-opacity:0; } }
+    .packet-modal-backdrop { position:fixed; inset:0; z-index:2000; display:grid; place-items:center; padding:18px; background:rgba(0,0,0,.58); backdrop-filter:blur(3px); }
+    .packet-modal-backdrop[hidden] { display:none; }
+    .packet-modal { width:min(760px,100%); max-height:min(86vh,820px); overflow:auto; padding:20px; border:1px solid var(--border); border-radius:16px; background:var(--surface1); box-shadow:0 24px 70px rgba(0,0,0,.35); }
+    .packet-modal-header { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:14px; }
+    .packet-modal-header h2 { margin:0; }
+    .packet-modal-close { width:40px; min-width:40px; height:40px; padding:0; font-size:22px; line-height:1; }
+    .packet-detail-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .packet-detail-item { min-width:0; padding:10px 12px; border:1px solid var(--border); border-radius:11px; background:var(--surface2); }
+    .packet-detail-item.wide { grid-column:1 / -1; }
+    .packet-detail-label { display:block; margin-bottom:4px; color:var(--text-muted); font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+    .packet-detail-value { color:var(--text); font-size:14px; overflow-wrap:anywhere; }
+    .packet-detail-json { margin:12px 0 0; padding:12px; overflow:auto; border:1px solid var(--border); border-radius:11px; color:var(--text); background:var(--background); font-size:12px; line-height:1.45; }
     @media (max-width:760px) {
       body { font-size:15px; }
       main { padding:16px; }
       .card { padding:16px; margin-bottom:14px; }
-      .row, .row3, .row-command, .metric-grid, .trend-grid, .hud-grid-1, .hud-grid-2, .hud-grid-3, .core-grid, .core-metrics, .broker-stack, .broker-grid, .broker-grid.single, .broker-grid.two, .broker-grid.one-two { grid-template-columns:1fr; }
+      .row, .row3, .row-command, .metric-grid, .trend-grid, .hud-grid-1, .hud-grid-2, .hud-grid-3, .core-grid, .core-metrics, .broker-stack, .broker-grid, .broker-grid.single, .broker-grid.two, .broker-grid.one-two, .packet-toolbar { grid-template-columns:1fr; }
       .inline-actions { grid-template-columns:minmax(0,1fr) auto auto; }
       .fieldline { grid-template-columns:minmax(0,1fr) auto; align-items:center; }
       .row-command button { width:100%; }
@@ -555,6 +602,8 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       .quick { gap:8px; }
       #quickCommandsPanel .quick { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
       .quick button, .themebtn { width:100%; }
+      .packet-detail-grid { grid-template-columns:1fr; }
+      .packet-detail-item.wide { grid-column:auto; }
       .actions-bar { display:grid; grid-template-columns:1fr; gap:10px; }
       .actions-group { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
       .actions-group.left, .actions-group.center, .actions-group.right { justify-self:stretch; }
@@ -588,6 +637,7 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
         <div class="actions-group left">
           <button id="appPageBtn" class="themebtn">App</button>
           <button id="statsPageBtn" class="themebtn">Stats</button>
+          <button id="packetsPageBtn" class="themebtn">Packets</button>
         </div>
         <div class="actions-group center">
           <button id="advertBtn" class="action-advert">Advert</button>
@@ -730,6 +780,15 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
             </div>
           </div>
           <div class="field-card">
+            <label class="label">Repeater position — click the map or drag the marker</label>
+            <div id="coordinateMap" class="map-shell"><div class="map-fallback">Map library is unavailable. Latitude and longitude fields remain editable.</div></div>
+            <div class="inline-actions">
+              <span class="panel-note">The marker updates both coordinate fields.</span>
+              <span class="placeholder-slot" aria-hidden="true"></span>
+              <button id="saveCoordinatesBtn" class="savebtn">Save coordinates</button>
+            </div>
+          </div>
+          <div class="field-card">
             <label class="label" for="privateKey">Private Key</label>
             <div class="inline-actions">
               <input id="privateKey" type="password" placeholder="64-hex-char private key">
@@ -746,6 +805,38 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
               <button id="saveOwnerInfo" class="savebtn">Save</button>
             </div>
           </div>
+        </div>
+        <div class="section-group">
+          <h3>Wi-Fi</h3>
+          <div class="row">
+            <div class="field-card">
+              <label class="label" for="wifiSsid">Network name (SSID)</label>
+              <div class="fieldline">
+                <input id="wifiSsid" maxlength="32" placeholder="Wi-Fi network">
+                <button class="iconbtn" data-load-cmd="get wifi.ssid" data-load-input="wifiSsid" title="Refresh SSID">&#8635;</button>
+              </div>
+            </div>
+            <div class="field-card">
+              <label class="label" for="wifiPassword">Network password</label>
+              <input id="wifiPassword" type="password" maxlength="64" placeholder="leave empty for an open network" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="row">
+            <div class="field-card">
+              <label class="label" for="wifiPowerSave">Power saving</label>
+              <div class="inline-actions">
+                <select id="wifiPowerSave"><option value="none">None</option><option value="min">Minimum</option><option value="max">Maximum</option></select>
+                <button class="iconbtn" data-load-cmd="get wifi.powersaving" data-load-input="wifiPowerSave" title="Refresh Wi-Fi power saving">&#8635;</button>
+                <button class="savebtn" data-prefix="set wifi.powersaving " data-input="wifiPowerSave">Save</button>
+              </div>
+            </div>
+            <div class="field-card">
+              <label class="label">Apply network</label>
+              <button id="saveWifiCredentialsBtn" class="savebtn">Save SSID and password</button>
+              <p class="panel-copy">The current session will disconnect while the node joins the new network.</p>
+            </div>
+          </div>
+          <div id="wifiCredentialsStatus" class="panel-status"></div>
         </div>
         <div class="section-group">
           <h3>Access</h3>
@@ -805,6 +896,15 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
               <button class="iconbtn" data-load-cmd="get path.hash.mode" data-load-input="pathHashMode" title="Refresh path hash mode">&#8635;</button>
               <button class="savebtn" data-prefix="set path.hash.mode " data-input="pathHashMode">Save</button>
             </div>
+          </div>
+          <div class="field-card">
+            <label class="label" for="txPower">Board output power (dBm)</label>
+            <div class="inline-actions">
+              <input id="txPower" type="number" min="3" max="28" step="1" placeholder="22">
+              <button id="refreshTxPowerBtn" class="iconbtn" title="Refresh transmitter power">&#8635;</button>
+              <button id="saveTxPowerBtn" class="savebtn">Save</button>
+            </div>
+            <div id="txPowerStatus" class="panel-note">Loading safe board limits...</div>
           </div>
         </div>
         <div class="section-group">
@@ -1000,21 +1100,217 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       </div>
     </section>
 
+    <section class="card" id="packetsPagePanel" style="display:none">
+      <h2 style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px">Packet Monitor<span id="packetLastUpdated" class="stats-stale"></span></h2>
+      <p class="panel-copy">Live metadata for packets received, transmitted, or rejected by this repeater. Encrypted payload contents are not exposed.</p>
+      <div id="packetMap" class="map-shell packet-map-shell"><div class="map-fallback">Map library is unavailable. Packet table continues to work.</div></div>
+      <div class="map-legend"><span style="--legend-color:#36a167">RX verified</span><span style="--legend-color:#407ed6">TX verified</span><span class="inferred" style="--legend-color:#d79a31">Inferred path</span><span style="--legend-color:#9aa4b2">Unknown endpoint pulse</span></div>
+      <div class="packet-toolbar">
+        <div class="field-card">
+          <label class="label" for="packetDirectionFilter">Direction</label>
+          <select id="packetDirectionFilter"><option value="all">All</option><option value="rx">RX</option><option value="tx">TX</option><option value="tx_fail">TX failed</option></select>
+        </div>
+        <div class="field-card">
+          <label class="label" for="packetTypeFilter">Packet type</label>
+          <input id="packetTypeFilter" placeholder="advert, text, ack...">
+        </div>
+        <div class="field-card">
+          <label class="label" for="packetRssiFilter">Minimum RSSI</label>
+          <input id="packetRssiFilter" type="number" min="-160" max="0" placeholder="-120">
+        </div>
+        <div class="field-card">
+          <label class="label" for="packetLimit">Rows</label>
+          <select id="packetLimit"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option></select>
+        </div>
+        <button id="packetLiveToggle" class="active">Live: on</button>
+        <button id="packetClearBtn" class="themebtn">Clear</button>
+        <button id="packetExportBtn" class="themebtn">Export CSV</button>
+      </div>
+      <div class="packet-summary" id="packetSummary"><span>Waiting for packet data...</span></div>
+      <div class="packet-table-wrap">
+        <table class="packet-table">
+          <thead><tr><th>Time</th><th>Dir</th><th>Type</th><th>Route</th><th>RSSI</th><th>SNR</th><th>Bytes</th><th>Payload</th><th>Hops</th><th>Airtime</th><th>Hash</th><th>Seq</th></tr></thead>
+          <tbody id="packetRows"><tr><td colspan="12" class="events-empty">Waiting for packets...</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div id="packetDetailModal" class="packet-modal-backdrop" hidden>
+      <section class="packet-modal" role="dialog" aria-modal="true" aria-labelledby="packetDetailTitle">
+        <div class="packet-modal-header">
+          <div><h2 id="packetDetailTitle">Packet details</h2><div id="packetDetailSubtitle" class="panel-note"></div></div>
+          <button id="packetDetailCloseBtn" class="packet-modal-close" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div id="packetDetailBody" class="packet-detail-grid"></div>
+        <pre id="packetDetailJson" class="packet-detail-json"></pre>
+        <div class="inline-actions" style="margin-top:12px;grid-template-columns:1fr auto">
+          <span class="panel-note">Payload contents are not stored or displayed.</span>
+          <button id="packetDetailCopyBtn" class="themebtn" type="button">Copy metadata</button>
+        </div>
+      </section>
+    </div>
+
   </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const RADIO_PRESETS_URL = "https://api.vbart.ru/meshcore-firmware/v1/conf.json";
     const isStatsPage = window.location.pathname === "/stats";
+    const isPacketsPage = window.location.pathname === "/packets";
+    const isMonitorPage = isStatsPage || isPacketsPage;
     const PANEL_TITLE_KEY = "repeater-panel-title";
     let token = sessionStorage.getItem("repeater-token") || "";
     let commandQueue = Promise.resolve();
     let radioPresetEntries = [];
     let currentRadioConfig = null;
     let statsLastFetchedAt = null;
+    let packetEntries = [];
+    let packetLatestSeq = 0;
+    let packetCapacity = 0;
+    let packetDropped = 0;
+    let packetPolling = true;
+    let packetPollTimer = null;
+    let coordinateMap = null;
+    let coordinateMarker = null;
+    let packetMap = null;
+    let packetSelf = null;
+    let packetNodes = new Map();
+    let packetNodeMarkers = new Map();
+    let packetMapViewportInitialized = false;
+    let packetDetailSequence = null;
     let radioSettingsChanged = false;
     const statusEl = document.getElementById("status");
     const replyEl = document.getElementById("reply");
     const themeToggleEl = document.getElementById("themeToggle");
     const rootEl = document.documentElement;
+    function hasLeaflet() { return typeof window.L !== "undefined"; }
+    function addBaseMap(map) {
+      return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom:19,
+        attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+    }
+    function parsedCoordinates() {
+      const lat = Number(document.getElementById("nodeLat").value);
+      const lon = Number(document.getElementById("nodeLon").value);
+      return Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180
+        ? { lat, lon } : null;
+    }
+    function setCoordinateMarker(lat, lon, center = false) {
+      if (!coordinateMap) return;
+      const point = [lat, lon];
+      if (!coordinateMarker) {
+        coordinateMarker = L.marker(point, { draggable:true }).addTo(coordinateMap);
+        coordinateMarker.on("dragend", () => {
+          const moved = coordinateMarker.getLatLng();
+          document.getElementById("nodeLat").value = moved.lat.toFixed(6);
+          document.getElementById("nodeLon").value = moved.lng.toFixed(6);
+        });
+      } else {
+        coordinateMarker.setLatLng(point);
+      }
+      if (center) coordinateMap.setView(point, 13);
+    }
+    function initCoordinateMap() {
+      const container = document.getElementById("coordinateMap");
+      if (!container || coordinateMap) return;
+      if (!hasLeaflet()) {
+        const fallback = container.querySelector(".map-fallback");
+        if (fallback) fallback.style.display = "block";
+        return;
+      }
+      container.innerHTML = "";
+      const coords = parsedCoordinates();
+      const hasSetPosition = coords && !(coords.lat === 0 && coords.lon === 0);
+      coordinateMap = L.map(container).setView(hasSetPosition ? [coords.lat, coords.lon] : [55.75, 37.62], hasSetPosition ? 13 : 4);
+      addBaseMap(coordinateMap);
+      if (hasSetPosition) setCoordinateMarker(coords.lat, coords.lon);
+      coordinateMap.on("click", (event) => {
+        document.getElementById("nodeLat").value = event.latlng.lat.toFixed(6);
+        document.getElementById("nodeLon").value = event.latlng.lng.toFixed(6);
+        setCoordinateMarker(event.latlng.lat, event.latlng.lng);
+      });
+      setTimeout(() => coordinateMap.invalidateSize(), 0);
+    }
+    function syncCoordinateMapFromInputs() {
+      const coords = parsedCoordinates();
+      if (coords) setCoordinateMarker(coords.lat, coords.lon, true);
+    }
+    function initPacketMap() {
+      const container = document.getElementById("packetMap");
+      if (!container || packetMap) return;
+      if (!hasLeaflet()) {
+        const fallback = container.querySelector(".map-fallback");
+        if (fallback) fallback.style.display = "block";
+        return;
+      }
+      container.innerHTML = "";
+      packetMap = L.map(container).setView([55.75, 37.62], 4);
+      addBaseMap(packetMap);
+      setTimeout(() => packetMap.invalidateSize(), 0);
+    }
+    function validMapNode(node) {
+      return node && node.has_location !== false && Number.isFinite(Number(node.lat)) && Number.isFinite(Number(node.lon)) &&
+        Number(node.lat) >= -90 && Number(node.lat) <= 90 && Number(node.lon) >= -180 && Number(node.lon) <= 180;
+    }
+    function updatePacketMapNodes(payload) {
+      if (!packetMap) initPacketMap();
+      if (payload && payload.self) packetSelf = payload.self;
+      if (payload && Array.isArray(payload.nodes)) {
+        for (const node of payload.nodes) packetNodes.set(node.key, node);
+      }
+      if (!packetMap) return;
+      const bounds = [];
+      if (validMapNode(packetSelf) && !(Number(packetSelf.lat) === 0 && Number(packetSelf.lon) === 0)) {
+        const point = [Number(packetSelf.lat), Number(packetSelf.lon)];
+        bounds.push(point);
+        if (!packetNodeMarkers.has("self")) {
+          packetNodeMarkers.set("self", L.circleMarker(point, { radius:8, color:"#ffffff", weight:2, fillColor:"#2f8f4e", fillOpacity:1 })
+            .addTo(packetMap).bindTooltip(escapeHtml(packetSelf.name || "This repeater")));
+        } else packetNodeMarkers.get("self").setLatLng(point);
+      }
+      for (const [key, node] of packetNodes) {
+        if (!validMapNode(node)) continue;
+        const point = [Number(node.lat), Number(node.lon)];
+        bounds.push(point);
+        if (!packetNodeMarkers.has(key)) {
+          const label = `${escapeHtml(node.name || "Mesh node")}<br>${escapeHtml(key)}`;
+          packetNodeMarkers.set(key, L.circleMarker(point, { radius:6, color:"#ffffff", weight:1, fillColor:"#d79a31", fillOpacity:.9 })
+            .addTo(packetMap).bindTooltip(label));
+        } else packetNodeMarkers.get(key).setLatLng(point);
+      }
+      if (!packetMapViewportInitialized && bounds.length > 0) {
+        if (bounds.length > 1) packetMap.fitBounds(bounds, { padding:[30,30], maxZoom:13 });
+        else packetMap.setView(bounds[0], 12);
+        packetMapViewportInitialized = true;
+      }
+    }
+    function animatePacketOnMap(entry) {
+      if (!packetMap || !validMapNode(packetSelf) || (Number(packetSelf.lat) === 0 && Number(packetSelf.lon) === 0)) return;
+      const selfPoint = [Number(packetSelf.lat), Number(packetSelf.lon)];
+      const verified = entry.node_key ? packetNodes.get(entry.node_key) : null;
+      let points = [];
+      let color = entry.direction === "rx" ? "#36a167" : (entry.direction === "tx" ? "#407ed6" : "#d45a5a");
+      let dashed = false;
+      if (validMapNode(verified)) {
+        const remote = [Number(verified.lat), Number(verified.lon)];
+        points = entry.direction === "rx" ? [remote, selfPoint] : [selfPoint, remote];
+      } else if (Array.isArray(entry.path_nodes) && entry.path_nodes.length) {
+        const inferred = entry.path_nodes.map((key) => packetNodes.get(key)).filter(validMapNode)
+          .map((node) => [Number(node.lat), Number(node.lon)]);
+        if (inferred.length) {
+          points = entry.direction === "rx" ? [...inferred, selfPoint] : [selfPoint, ...inferred];
+          color = "#d79a31";
+          dashed = true;
+        }
+      }
+      let layer;
+      if (points.length >= 2) {
+        layer = L.polyline(points, { color, weight:5, opacity:.95, dashArray:dashed ? "8 7" : null, className:"packet-flight" }).addTo(packetMap);
+      } else {
+        layer = L.circleMarker(selfPoint, { radius:20, color, weight:3, fillColor:color, fillOpacity:.35, className:"packet-pulse" }).addTo(packetMap);
+      }
+      setTimeout(() => { if (packetMap && layer) packetMap.removeLayer(layer); }, 3000);
+    }
     function updatePanelTitle(nameValue) {
       const fallbackTitle = "Repeater Config";
       const trimmedName = String(nameValue == null ? "" : nameValue).trim();
@@ -1033,7 +1329,7 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       }
     }
     function redirectToLogin() {
-      const next = isStatsPage ? "/stats" : "/app";
+      const next = isStatsPage ? "/stats" : (isPacketsPage ? "/packets" : "/app");
       sessionStorage.removeItem("repeater-token");
       token = "";
       window.location.replace("/?next=" + encodeURIComponent(next));
@@ -1053,11 +1349,12 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
     function syncNavButton() {
       const appBtn = document.getElementById("appPageBtn");
       const statsBtn = document.getElementById("statsPageBtn");
+      const packetsBtn = document.getElementById("packetsPageBtn");
       const centerGroup = document.querySelector("#actionsPanel .actions-group.center");
       const advertBtn = document.getElementById("advertBtn");
       const refreshSplitGroup = document.getElementById("refreshSplitGroup");
       if (appBtn) {
-        appBtn.classList.toggle("active", !isStatsPage);
+        appBtn.classList.toggle("active", !isMonitorPage);
         appBtn.title = "Open app page";
         appBtn.onclick = () => window.location.assign("/app");
       }
@@ -1066,8 +1363,13 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
         statsBtn.title = "Open stats page";
         statsBtn.onclick = () => window.location.assign("/stats");
       }
-      if (advertBtn) advertBtn.style.display = isStatsPage ? "none" : "";
-      if (refreshSplitGroup) refreshSplitGroup.style.display = isStatsPage ? "" : "none";
+      if (packetsBtn) {
+        packetsBtn.classList.toggle("active", isPacketsPage);
+        packetsBtn.title = "Open packet monitor";
+        packetsBtn.onclick = () => window.location.assign("/packets");
+      }
+      if (advertBtn) advertBtn.style.display = isMonitorPage ? "none" : "";
+      if (refreshSplitGroup) refreshSplitGroup.style.display = isMonitorPage ? "" : "none";
     }
     function toggleTheme() {
       const next = rootEl.dataset.theme === "dark" ? "light" : "dark";
@@ -2147,14 +2449,15 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       const mqttIataBanner = document.getElementById("mqttIataBanner");
       document.getElementById("login").style.display = show ? "none" : "block";
       document.getElementById("actionsPanel").style.display = show ? "block" : "none";
-      document.getElementById("cliPanel").style.display = show && !isStatsPage ? "block" : "none";
-      document.getElementById("quickCommandsPanel").style.display = show && !isStatsPage ? "block" : "none";
-      document.getElementById("mqttSettingsPanel").style.display = show && !isStatsPage ? "block" : "none";
-      document.getElementById("infoPanel").style.display = show && !isStatsPage ? "block" : "none";
+      document.getElementById("cliPanel").style.display = show && !isMonitorPage ? "block" : "none";
+      document.getElementById("quickCommandsPanel").style.display = show && !isMonitorPage ? "block" : "none";
+      document.getElementById("mqttSettingsPanel").style.display = show && !isMonitorPage ? "block" : "none";
+      document.getElementById("infoPanel").style.display = show && !isMonitorPage ? "block" : "none";
       document.getElementById("statsPanel").style.display = show && !isStatsPage ? "none" : "none";
       document.getElementById("statsPagePanel").style.display = show && isStatsPage ? "block" : "none";
-      document.getElementById("repeaterSettingsPanel").style.display = show && !isStatsPage ? "block" : "none";
-      document.getElementById("otaPanel").style.display = show && !isStatsPage ? "block" : "none";
+      document.getElementById("packetsPagePanel").style.display = show && isPacketsPage ? "block" : "none";
+      document.getElementById("repeaterSettingsPanel").style.display = show && !isMonitorPage ? "block" : "none";
+      document.getElementById("otaPanel").style.display = show && !isMonitorPage ? "block" : "none";
       if (!show) {
         if (mqttIataBanner) mqttIataBanner.classList.remove("visible");
         commandQueue = Promise.resolve();
@@ -2166,6 +2469,10 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
         if (summaryEl) summaryEl.innerHTML = '<div class="stats-empty">Loading summary...</div>';
         const trendsEl = document.getElementById("statsTrends");
         if (trendsEl) trendsEl.innerHTML = "";
+        if (packetPollTimer) {
+          clearInterval(packetPollTimer);
+          packetPollTimer = null;
+        }
       }
     }
     function isUnsetMqttIata(value) {
@@ -2179,7 +2486,7 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       const inlineWarning = document.getElementById("mqttBrokerWarning");
       const showWarning = !!(input && isUnsetMqttIata(input.value));
       if (banner) {
-        banner.classList.toggle("visible", showWarning && !isStatsPage);
+        banner.classList.toggle("visible", showWarning && !isMonitorPage);
       }
       if (inlineWarning) {
         inlineWarning.style.display = showWarning ? "" : "none";
@@ -2392,6 +2699,53 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
       setRadioPresetStatus("");
       syncRadioPresetUi();
     }
+    async function loadTxPower(options = {}) {
+      const result = await runCommand("get web.tx", options);
+      const status = document.getElementById("txPowerStatus");
+      if (!result.ok) {
+        if (status) status.textContent = "Unable to read transmitter power.";
+        return;
+      }
+      const value = parseReplyValue(result.text);
+      const match = value.match(/current:(-?\d+)\s+min:(-?\d+)\s+max:(-?\d+)\s+boost:(-?\d+)\s+radio:(-?\d+)/);
+      if (!match) {
+        if (status) status.textContent = "Unexpected transmitter power response.";
+        return;
+      }
+      const input = document.getElementById("txPower");
+      input.value = match[1];
+      input.min = match[2];
+      input.max = match[3];
+      const boost = Number(match[4]);
+      if (status) status.textContent = boost
+        ? `Board hardware range ${match[2]}…${match[3]} dBm. Current SX1262 drive is ${match[5]} dBm; onboard PA gain is about ${boost} dB. No regional limit is applied.`
+        : `Board hardware range ${match[2]}…${match[3]} dBm. No regional limit is applied.`;
+    }
+    async function saveTxPower() {
+      const input = document.getElementById("txPower");
+      const status = document.getElementById("txPowerStatus");
+      const value = Number(input.value);
+      if (!Number.isInteger(value) || value < Number(input.min) || value > Number(input.max)) {
+        status.textContent = `Enter an integer from ${input.min} to ${input.max} dBm.`;
+        return;
+      }
+      const result = await runCommand("set web.tx " + value, { recordHistory:false, updateInput:false });
+      status.textContent = parseReplyValue(result.text) || (result.ok ? "Saved." : "Unable to save transmitter power.");
+      if (result.ok) await loadTxPower({ recordHistory:false, updateInput:false });
+    }
+    async function saveCoordinates() {
+      const coords = parsedCoordinates();
+      if (!coords) {
+        statusEl.textContent = "Latitude must be -90…90 and longitude -180…180.";
+        return;
+      }
+      const options = { recordHistory:false, updateInput:false };
+      const latResult = await runCommand("set lat " + coords.lat.toFixed(6), options);
+      if (!latResult.ok) { statusEl.textContent = parseReplyValue(latResult.text) || "Unable to save latitude."; return; }
+      const lonResult = await runCommand("set lon " + coords.lon.toFixed(6), options);
+      statusEl.textContent = lonResult.ok ? "Coordinates saved." : (parseReplyValue(lonResult.text) || "Unable to save longitude.");
+      if (lonResult.ok) syncCoordinateMapFromInputs();
+    }
     function pause(ms) {
       return new Promise((resolve) => setTimeout(resolve, ms));
     }
@@ -2470,10 +2824,230 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
         await pause(40);
       }
     }
+    function filteredPacketEntries() {
+      const direction = document.getElementById("packetDirectionFilter").value;
+      const typeQuery = document.getElementById("packetTypeFilter").value.trim().toLowerCase();
+      const rssiValue = document.getElementById("packetRssiFilter").value.trim();
+      const minimumRssi = rssiValue === "" ? null : Number(rssiValue);
+      const limit = Number(document.getElementById("packetLimit").value) || 50;
+      return packetEntries.filter((entry) => {
+        if (direction !== "all" && entry.direction !== direction) return false;
+        const typeLabel = String(entry.type_name || entry.type || "").toLowerCase();
+        if (typeQuery && !typeLabel.includes(typeQuery)) return false;
+        if (minimumRssi !== null && (!Number.isFinite(entry.rssi) || entry.rssi < minimumRssi)) return false;
+        return true;
+      }).slice(0, limit);
+    }
+    function formatPacketTime(entry) {
+      if (Number.isFinite(entry.ts) && entry.ts > 1600000000) {
+        return new Date(entry.ts * 1000).toLocaleTimeString();
+      }
+      const uptime = Number(entry.uptime_ms) || 0;
+      const totalSeconds = Math.floor(uptime / 1000);
+      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      return `+${hours}:${minutes}:${seconds}`;
+    }
+    function packetDetailItem(label, value, wide = false) {
+      return `<div class="packet-detail-item${wide ? " wide" : ""}"><span class="packet-detail-label">${escapeHtml(label)}</span><span class="packet-detail-value">${escapeHtml(value)}</span></div>`;
+    }
+    function packetNodeLabel(node, fallbackKey = "") {
+      if (!node) return fallbackKey || "Not identified";
+      const name = node.name || "Unnamed mesh node";
+      return fallbackKey ? `${name} (${fallbackKey})` : name;
+    }
+    function closePacketDetails() {
+      const modal = document.getElementById("packetDetailModal");
+      modal.hidden = true;
+      packetDetailSequence = null;
+    }
+    function showPacketDetails(sequence) {
+      const entry = packetEntries.find((candidate) => Number(candidate.seq) === Number(sequence));
+      if (!entry) return;
+      packetDetailSequence = Number(entry.seq);
+      const verifiedNode = entry.node_key ? packetNodes.get(entry.node_key) : null;
+      const pathKeys = Array.isArray(entry.path_nodes) ? entry.path_nodes : [];
+      const pathLabels = pathKeys.map((key) => packetNodeLabel(packetNodes.get(key), key));
+      const transport = Array.isArray(entry.transport) ? entry.transport.join(" / ") : "--";
+      const packetBytes = Number(entry.len) || 0;
+      const payloadBytes = Number(entry.payload_len) || 0;
+      const overheadBytes = Math.max(0, packetBytes - payloadBytes);
+      const epochValid = Number.isFinite(entry.ts) && entry.ts > 1600000000;
+      const receivedAt = epochValid ? new Date(entry.ts * 1000).toLocaleString() : `${formatPacketTime(entry)} device uptime`;
+      const signal = Number.isFinite(entry.rssi)
+        ? `${entry.rssi} dBm RSSI / ${Number(entry.snr).toFixed(2)} dB SNR`
+        : "Not available for transmitted packets";
+      let endpoint = packetNodeLabel(verifiedNode, entry.node_key || "");
+      if (verifiedNode && validMapNode(verifiedNode)) endpoint += ` · ${Number(verifiedNode.lat).toFixed(6)}, ${Number(verifiedNode.lon).toFixed(6)}`;
+      document.getElementById("packetDetailTitle").textContent = `Packet #${entry.seq}`;
+      document.getElementById("packetDetailSubtitle").textContent = `${String(entry.direction || "unknown").toUpperCase()} · ${entry.type_name || entry.type || "unknown"} · ${entry.hash || "no hash"}`;
+      document.getElementById("packetDetailBody").innerHTML = [
+        packetDetailItem("Time", receivedAt),
+        packetDetailItem("Device uptime", `${Math.floor((Number(entry.uptime_ms) || 0) / 1000)} s`),
+        packetDetailItem("Direction", String(entry.direction || "unknown").toUpperCase()),
+        packetDetailItem("Payload type", `${entry.type_name || "unknown"} (${Number(entry.type) || 0})`),
+        packetDetailItem("Route", entry.route || "unknown"),
+        packetDetailItem("Signal", signal),
+        packetDetailItem("Packet / payload", `${packetBytes} / ${payloadBytes} bytes (${overheadBytes} bytes overhead)`),
+        packetDetailItem("Airtime", `${Number(entry.airtime_ms) || 0} ms`),
+        packetDetailItem("Hops / hash size", `${Number(entry.hops) || 0} / ${Number(entry.path_hash_size) || 0} bytes`),
+        packetDetailItem("Routing score", Number.isFinite(entry.score) && entry.score >= 0 ? `${entry.score} (x1000)` : "Not available"),
+        packetDetailItem("Packet hash", entry.hash || "--"),
+        packetDetailItem("Transport codes", transport),
+        packetDetailItem("Verified endpoint", endpoint, true),
+        packetDetailItem("Uniquely matched path nodes", pathLabels.length ? pathLabels.join(" -> ") : "None identified", true)
+      ].join("");
+      document.getElementById("packetDetailJson").textContent = JSON.stringify(entry, null, 2);
+      document.getElementById("packetDetailModal").hidden = false;
+      document.getElementById("packetDetailCloseBtn").focus();
+    }
+    function renderPacketMonitor(payload = null) {
+      const rows = filteredPacketEntries();
+      const body = document.getElementById("packetRows");
+      if (!rows.length) {
+        body.innerHTML = '<tr><td colspan="12" class="events-empty">No packets match the current filters.</td></tr>';
+      } else {
+        body.innerHTML = rows.map((entry) => {
+          const signalRssi = Number.isFinite(entry.rssi) ? `${entry.rssi} dBm` : "--";
+          const signalSnr = Number.isFinite(entry.snr) ? `${Number(entry.snr).toFixed(2)} dB` : "--";
+          const score = Number.isFinite(entry.score) && entry.score >= 0 ? ` title="score ${entry.score}"` : "";
+          return `<tr class="packet-row" data-packet-seq="${Number(entry.seq) || 0}" tabindex="0" role="button" aria-label="Open details for packet ${Number(entry.seq) || 0}">
+            <td>${escapeHtml(formatPacketTime(entry))}</td>
+            <td><span class="packet-direction ${escapeHtml(entry.direction)}">${escapeHtml(entry.direction)}</span></td>
+            <td>${escapeHtml(entry.type_name || String(entry.type))}</td>
+            <td>${escapeHtml(entry.route || "--")}</td>
+            <td${score}>${escapeHtml(signalRssi)}</td>
+            <td>${escapeHtml(signalSnr)}</td>
+            <td>${Number(entry.len) || 0}</td>
+            <td>${Number(entry.payload_len) || 0}</td>
+            <td>${Number(entry.hops) || 0}</td>
+            <td>${Number(entry.airtime_ms) || 0} ms</td>
+            <td>${escapeHtml(entry.hash || "--")}</td>
+            <td>${Number(entry.seq) || 0}</td>
+          </tr>`;
+        }).join("");
+      }
+      const rx = packetEntries.filter((entry) => entry.direction === "rx").length;
+      const tx = packetEntries.filter((entry) => entry.direction === "tx").length;
+      const failed = packetEntries.filter((entry) => entry.direction === "tx_fail").length;
+      document.getElementById("packetSummary").innerHTML =
+        `<span>Visible <strong>${rows.length}</strong></span><span>RX <strong>${rx}</strong></span>` +
+        `<span>TX <strong>${tx}</strong></span><span>Failed <strong>${failed}</strong></span>` +
+        `<span>Buffer <strong>${packetEntries.length}/${packetCapacity || "--"}</strong></span><span>Dropped <strong>${packetDropped}</strong></span>`;
+      document.getElementById("packetLastUpdated").textContent = "updated " + new Date().toLocaleTimeString();
+    }
+    async function loadPacketPage(incremental = false) {
+      try {
+        const since = incremental ? packetLatestSeq : 0;
+        const payload = await fetchJson(`/api/packets?since=${since}&limit=${incremental ? 64 : 32}&include_nodes=1`);
+        if (!payload || !Array.isArray(payload.entries)) throw new Error("invalid packet payload");
+        updatePacketMapNodes(payload);
+        packetCapacity = Number(payload.capacity) || packetCapacity;
+        packetDropped = Number(payload.dropped) || 0;
+        if (!incremental) {
+          packetEntries = payload.entries;
+        } else if (payload.entries.length) {
+          const merged = [...payload.entries, ...packetEntries];
+          const seen = new Set();
+          packetEntries = merged.filter((entry) => {
+            if (seen.has(entry.seq)) return false;
+            seen.add(entry.seq);
+            return true;
+          }).sort((a, b) => b.seq - a.seq).slice(0, 256);
+          [...payload.entries].sort((a, b) => a.seq - b.seq).forEach(animatePacketOnMap);
+        }
+        packetLatestSeq = Math.max(packetLatestSeq, Number(payload.latest_seq) || 0);
+        renderPacketMonitor(payload);
+        statusEl.textContent = "Ready";
+      } catch (error) {
+        document.getElementById("packetSummary").innerHTML = `<span class="stats-error">${escapeHtml(error && error.message ? error.message : "Packet monitor unavailable")}</span>`;
+      }
+    }
+    function startPacketPolling() {
+      if (packetPollTimer) clearInterval(packetPollTimer);
+      packetPollTimer = setInterval(() => {
+        if (packetPolling && document.visibilityState === "visible") loadPacketPage(true);
+      }, 2000);
+    }
+    function exportPacketsCsv() {
+      const columns = ["seq","timestamp","uptime_ms","direction","type","route","rssi","snr","bytes","payload_bytes","hops","airtime_ms","hash"];
+      const lines = [columns.join(",")];
+      for (const entry of filteredPacketEntries()) {
+        const values = [entry.seq, entry.ts, entry.uptime_ms, entry.direction, entry.type_name || entry.type,
+          entry.route, entry.rssi ?? "", entry.snr ?? "", entry.len, entry.payload_len, entry.hops,
+          entry.airtime_ms, entry.hash];
+        lines.push(values.map((value) => `"${String(value ?? "").replace(/"/g, '""')}"`).join(","));
+      }
+      const blob = new Blob([lines.join("\n")], { type:"text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `meshcore-packets-${new Date().toISOString().replace(/[:.]/g, "-")}.csv`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    }
     document.getElementById("runBtn").onclick = () => runCommand(document.getElementById("command").value);
     const openStats = () => window.location.assign("/stats");
     const openApp = () => window.location.assign("/app");
     document.getElementById("openStatsPanelBtn").onclick = () => openStats();
+    ["packetDirectionFilter", "packetTypeFilter", "packetRssiFilter", "packetLimit"].forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) element.addEventListener("input", () => renderPacketMonitor());
+    });
+    document.getElementById("packetLiveToggle").onclick = (event) => {
+      packetPolling = !packetPolling;
+      event.currentTarget.textContent = packetPolling ? "Live: on" : "Live: off";
+      event.currentTarget.classList.toggle("active", packetPolling);
+      if (packetPolling) loadPacketPage(true);
+    };
+    document.getElementById("packetExportBtn").onclick = () => exportPacketsCsv();
+    document.getElementById("packetRows").addEventListener("click", (event) => {
+      const row = event.target.closest("[data-packet-seq]");
+      if (row) showPacketDetails(row.dataset.packetSeq);
+    });
+    document.getElementById("packetRows").addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const row = event.target.closest("[data-packet-seq]");
+      if (!row) return;
+      event.preventDefault();
+      showPacketDetails(row.dataset.packetSeq);
+    });
+    document.getElementById("packetDetailCloseBtn").onclick = () => closePacketDetails();
+    document.getElementById("packetDetailModal").addEventListener("click", (event) => {
+      if (event.target === event.currentTarget) closePacketDetails();
+    });
+    document.getElementById("packetDetailCopyBtn").onclick = () => {
+      const entry = packetEntries.find((candidate) => Number(candidate.seq) === packetDetailSequence);
+      if (entry) copyToClipboard(JSON.stringify(entry, null, 2), "Packet metadata copied");
+    };
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !document.getElementById("packetDetailModal").hidden) closePacketDetails();
+    });
+    document.getElementById("packetClearBtn").onclick = async () => {
+      if (!confirm("Clear the packet monitor buffer?")) return;
+      const result = await runCommand("clear web.packets", { recordHistory:false, updateInput:false });
+      if (result.ok) {
+        closePacketDetails();
+        packetEntries = [];
+        packetDropped = 0;
+        renderPacketMonitor();
+      }
+    };
+    document.getElementById("saveWifiCredentialsBtn").onclick = async () => {
+      const ssid = document.getElementById("wifiSsid").value;
+      const password = document.getElementById("wifiPassword").value;
+      const message = document.getElementById("wifiCredentialsStatus");
+      if (!ssid || ssid.length > 32 || password.length > 64 || ssid.includes("\t")) {
+        message.textContent = "Enter a valid SSID (1-32 characters) and password (up to 64 characters).";
+        return;
+      }
+      if (!confirm(`Connect the node to Wi-Fi network "${ssid}"? The current session will disconnect.`)) return;
+      message.textContent = "Saving Wi-Fi credentials...";
+      const result = await runCommand(`set wifi.credentials ${ssid}\t${password}`, { recordHistory:false, updateInput:false });
+      message.textContent = result.ok ? "Saved. Reconnect to the node at its new IP address." : result.text;
+      if (result.ok) document.getElementById("wifiPassword").value = "";
+    };
     document.getElementById("command").addEventListener("keydown", async (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
@@ -2559,6 +3133,10 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
 	    };
     document.getElementById("refreshRadioBtn").onclick = () => loadRadioConfig();
     document.getElementById("reloadRadioPresetsBtn").onclick = () => loadRadioPresets();
+    document.getElementById("refreshTxPowerBtn").onclick = () => loadTxPower();
+    document.getElementById("saveTxPowerBtn").onclick = () => saveTxPower();
+    document.getElementById("saveCoordinatesBtn").onclick = () => saveCoordinates();
+    ["nodeLat", "nodeLon"].forEach((id) => document.getElementById(id).addEventListener("change", syncCoordinateMapFromInputs));
     document.getElementById("copyPublicKeyBtn").onclick = () => copyToClipboard(document.getElementById("publicKey").value, "Public key copied");
     document.getElementById("copyPrivateKeyBtn").onclick = () => copyToClipboard(document.getElementById("privateKey").value.toUpperCase(), "Private key copied");
     document.getElementById("syncClockBtn").onclick = () => syncClock();
@@ -2688,6 +3266,8 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
           document.getElementById("autoRefreshBtn").textContent = `${autoRefreshCountdown}s`;
         }
         await loadStatsPage();
+      } else if (isPacketsPage) {
+        await loadPacketPage(false);
       } else {
         await initApp();
       }
@@ -2706,7 +3286,11 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
           if (autoRefreshCountdown <= 0) {
             autoRefreshCountdown = AUTO_REFRESH_INTERVAL;
             btn.textContent = `${autoRefreshCountdown}s`;
-            await loadStatsPage();
+            if (isStatsPage) {
+              await loadStatsPage();
+            } else if (isPacketsPage) {
+              await loadPacketPage(true);
+            }
           } else {
             btn.textContent = `${autoRefreshCountdown}s`;
           }
@@ -2731,6 +3315,17 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
         }
         return;
       }
+      if (isPacketsPage) {
+        try {
+          initPacketMap();
+          await loadPacketPage(false);
+          startPacketPolling();
+          statusEl.textContent = "Ready";
+        } catch (error) {
+          statusEl.textContent = error && error.message ? error.message : "Unable to load packets.";
+        }
+        return;
+      }
       const quiet = { recordHistory:false, updateInput:false };
       try {
         await loadSection("Loading info...", [
@@ -2752,8 +3347,14 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
           () => loadField("get prv.key", "privateKey", "uppercase", quiet),
           () => loadField("get owner.info", "ownerInfo", "multiline", quiet)
         ]);
+        initCoordinateMap();
+        await loadSection("Loading Wi-Fi settings...", [
+          () => loadField("get wifi.ssid", "wifiSsid", null, quiet),
+          () => loadField("get wifi.powersaving", "wifiPowerSave", null, quiet)
+        ]);
         await loadSection("Loading radio settings...", [
           () => loadRadioConfig(quiet),
+          () => loadTxPower(quiet),
           () => loadField("get path.hash.mode", "pathHashMode", null, quiet)
         ]);
         await loadSection("Loading advertising...", [
@@ -2782,9 +3383,9 @@ const char kWebPanelAppHtml[] PROGMEM = R"HTML(
 	    refreshMeshcoretelModeUi();
 	    refreshLetsmeshModeUi();
 	    initApp();
-	    if (isStatsPage) {
-	      setInterval(updateStatsLastUpdated, 10000);
-	    }
+    if (isStatsPage) {
+      setInterval(updateStatsLastUpdated, 10000);
+    }
   </script>
 </body>
 </html>
@@ -2809,7 +3410,7 @@ bool WebPanelServer::start() {
 
   httpd_ssl_config_t config = HTTPD_SSL_CONFIG_DEFAULT();
   config.httpd.max_open_sockets = 2;
-  config.httpd.max_uri_handlers = 8;
+  config.httpd.max_uri_handlers = 10;
   config.httpd.max_resp_headers = 4;
   config.httpd.backlog_conn = 0;
   config.httpd.recv_wait_timeout = 10;
@@ -2839,17 +3440,21 @@ bool WebPanelServer::start() {
   httpd_uri_t index_uri = {.uri = "/", .method = HTTP_GET, .handler = &WebPanelServer::handleIndex, .user_ctx = &_route_context};
   httpd_uri_t app_uri = {.uri = "/app", .method = HTTP_GET, .handler = &WebPanelServer::handleApp, .user_ctx = &_route_context};
   httpd_uri_t stats_page_uri = {.uri = "/stats", .method = HTTP_GET, .handler = &WebPanelServer::handleStatsPage, .user_ctx = &_route_context};
+  httpd_uri_t packets_page_uri = {.uri = "/packets", .method = HTTP_GET, .handler = &WebPanelServer::handlePacketsPage, .user_ctx = &_route_context};
   httpd_uri_t login_uri = {.uri = "/login", .method = HTTP_POST, .handler = &WebPanelServer::handleLogin, .user_ctx = &_route_context};
   httpd_uri_t command_uri = {.uri = "/api/command", .method = HTTP_POST, .handler = &WebPanelServer::handleCommand, .user_ctx = &_route_context};
   httpd_uri_t stats_uri = {.uri = "/api/stats", .method = HTTP_GET, .handler = &WebPanelServer::handleStats, .user_ctx = &_route_context};
+  httpd_uri_t packets_uri = {.uri = "/api/packets", .method = HTTP_GET, .handler = &WebPanelServer::handlePackets, .user_ctx = &_route_context};
   httpd_uri_t update = {.uri = "/update", .method = HTTP_GET, .handler = &WebPanelServer::handleOtaRedirect, .user_ctx = &_route_context};
   httpd_uri_t ota_uri = { .uri = "/api/ota", .method = HTTP_POST, .handler = &WebPanelServer::handleOtaUpload, .user_ctx = &_route_context };
   httpd_register_uri_handler(_server, &index_uri);
   httpd_register_uri_handler(_server, &app_uri);
   httpd_register_uri_handler(_server, &stats_page_uri);
+  httpd_register_uri_handler(_server, &packets_page_uri);
   httpd_register_uri_handler(_server, &login_uri);
   httpd_register_uri_handler(_server, &command_uri);
   httpd_register_uri_handler(_server, &stats_uri);
+  httpd_register_uri_handler(_server, &packets_uri);
   httpd_register_uri_handler(_server, &update);
   httpd_register_uri_handler(_server, &ota_uri);
 
@@ -2972,6 +3577,16 @@ esp_err_t WebPanelServer::handleStatsPage(httpd_req_t* req) {
   if (ctx->self->_runner != nullptr && !ctx->self->_runner->isWebStatsEnabled()) {
     return sendProgmem(req, kWebPanelStatsDisabledHtml);
   }
+  return sendProgmem(req, kWebPanelAppHtml);
+}
+
+esp_err_t WebPanelServer::handlePacketsPage(httpd_req_t* req) {
+  auto* ctx = static_cast<RouteContext*>(req->user_ctx);
+  if (ctx == nullptr || ctx->self == nullptr) {
+    return httpd_resp_send_500(req);
+  }
+  ctx->self->noteActivity();
+  httpd_resp_set_type(req, "text/html; charset=utf-8");
   return sendProgmem(req, kWebPanelAppHtml);
 }
 
@@ -3166,6 +3781,52 @@ esp_err_t WebPanelServer::handleStats(httpd_req_t* req) {
   httpd_resp_set_type(req, "application/json; charset=utf-8");
   httpd_resp_set_hdr(req, "Cache-Control", "no-store");
   esp_err_t rc = httpd_resp_send(req, reply, HTTPD_RESP_USE_STRLEN);
+  freeScratchBuffer(reply);
+  return rc;
+}
+
+esp_err_t WebPanelServer::handlePackets(httpd_req_t* req) {
+  auto* ctx = static_cast<RouteContext*>(req->user_ctx);
+  if (ctx == nullptr || ctx->self == nullptr || ctx->self->_runner == nullptr) {
+    return httpd_resp_send_500(req);
+  }
+  if (!ctx->self->isAuthorized(req)) {
+    return httpd_resp_send_err(req, HTTPD_401_UNAUTHORIZED, "Unauthorized");
+  }
+
+  ctx->self->noteActivity();
+  uint32_t since_sequence = 0;
+  size_t limit = 64;
+  char value[24];
+  if (getQueryValue(req, "since", value, sizeof(value))) {
+    since_sequence = static_cast<uint32_t>(strtoul(value, nullptr, 10));
+  }
+  if (getQueryValue(req, "limit", value, sizeof(value))) {
+    limit = static_cast<size_t>(strtoul(value, nullptr, 10));
+    if (limit < 1) limit = 1;
+    if (limit > 64) limit = 64;
+  }
+  bool include_nodes = false;
+  if (getQueryValue(req, "include_nodes", value, sizeof(value))) {
+    include_nodes = value[0] == '1' || strcmp(value, "true") == 0;
+  }
+
+  char* reply = allocScratchBuffer(kWebPacketsReplyBufferSize);
+  if (reply == nullptr) {
+    return httpd_resp_send_500(req);
+  }
+  reply[0] = 0;
+  const bool ok = ctx->self->_runner->formatWebPacketLogJson(
+      reply, kWebPacketsReplyBufferSize, since_sequence, limit, include_nodes);
+  if (!ok || reply[0] == 0) {
+    freeScratchBuffer(reply);
+    httpd_resp_set_status(req, "503 Service Unavailable");
+    return httpd_resp_send(req, "Packet log unavailable", HTTPD_RESP_USE_STRLEN);
+  }
+
+  httpd_resp_set_type(req, "application/json; charset=utf-8");
+  httpd_resp_set_hdr(req, "Cache-Control", "no-store");
+  const esp_err_t rc = httpd_resp_send(req, reply, HTTPD_RESP_USE_STRLEN);
   freeScratchBuffer(reply);
   return rc;
 }

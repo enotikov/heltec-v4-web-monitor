@@ -210,7 +210,7 @@ wheels = [
 ]
 
 [[package]]
-name = "meshcore-eastmesh"
+name = "heltec-v4-web-monitor"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

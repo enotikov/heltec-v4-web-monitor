@@ -1,17 +1,17 @@
-site_name: "Документация MeshCoreTel-firmware"
-site_url: https://vbart.github.io/MeshCoreTel-firmware/
-site_description: "Документация по специфичным для MeshCoreTel-firmware функциям: Wi-Fi, MQTT, веб-панель и API, также процессу выпуска релизов"
+site_name: "Heltec V4 Web Monitor"
+site_url: https://enotikov.github.io/heltec-v4-web-monitor/
+site_description: "Документация прошивки Heltec V4 Web Monitor: Wi-Fi, MQTT MeshCoreTel, веб-панель, монитор пакетов и API"
 
-repo_name: VBart/MeshCoreTel-firmware
-repo_url: https://github.com/VBart/MeshCoreTel-firmware
+repo_name: enotikov/heltec-v4-web-monitor
+repo_url: https://github.com/enotikov/heltec-v4-web-monitor
 edit_uri: edit/main/meshcoretel-docs/
 docs_dir: meshcoretel-docs
 
 theme:
   name: material
   language: ru
-  logo: _assets/vbart.svg
-  favicon: _assets/vbart.svg
+  logo: _assets/heltec-v4-web-monitor.svg
+  favicon: _assets/heltec-v4-web-monitor.svg
   features:
     - content.action.edit
     - content.code.copy
@@ -40,6 +40,7 @@ nav:
   - Введение: index.md
   - Устройства: boards.md
   - Прошивка: releases.md
+  - Heltec V4 Web Monitor: heltec-v4-web-monitor.md
   - CLI-команды: custom-cli.md
   - Веб-панель: web-panel.md
   - Веб-API: api.md
