@@ -1,6 +1,7 @@
-name: PR Build Check
+name: Heltec V4 PR Build Check
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [ main ]
     paths:
@@ -20,12 +21,8 @@ jobs:
       fail-fast: false
       matrix:
         environment:
-          # ESP32-S3 / core EastMesh targets
-          - heltec_v4_companion_radio_wifi
+          # Release target and one shared-web compatibility target.
           - heltec_v4_repeater_mqtt
-          - LilyGo_TBeam_1W_companion_radio_wifi
-          - LilyGo_TBeam_1W_repeater_mqtt
-          - T_Beam_S3_Supreme_SX1262_companion_radio_wifi
           - T_Beam_S3_Supreme_SX1262_repeater_mqtt
 
     steps:
