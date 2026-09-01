@@ -1,0 +1,511 @@
+schema_version: 1
+tracks:
+  - companion-wifi
+  - repeater-mqtt
+generated_from: "Adjacent git tag comparisons plus non-merge commit subjects."
+
+releases:
+  - track: companion-wifi
+    version: "1.14.1"
+    tag: "companion-wifi-v1.14.1"
+    date: "2026-04-09"
+    previous_version: null
+    summary: "First EastMesh companion_wifi release with persisted Wi-Fi CLI settings and EastMesh-specific docs and release plumbing."
+    changes:
+      - type: added
+        area: companion-wifi
+        text: "Added the EastMesh companion_wifi release track for supported boards."
+      - type: added
+        area: wifi
+        text: "Added persisted Wi-Fi CLI settings so companion Wi-Fi devices can retain configured credentials across restart."
+      - type: added
+        area: release
+        text: "Added EastMesh release documentation, local build guidance, and CI workflows focused on the supported Wi-Fi and MQTT firmware tracks."
+      - type: changed
+        area: docs
+        text: "Refreshed the docs site structure and theme as part of the first EastMesh release set."
+    breaking_changes: []
+
+  - track: companion-wifi
+    version: "1.15.0"
+    tag: "companion-wifi-v1.15.0"
+    date: "2026-04-19"
+    previous_version: "1.14.1"
+    summary: "Prepares the next companion_wifi release on top of upstream MeshCore firmware v1.15.0."
+    changes:
+      - type: changed
+        area: upstream
+        text: "Updated the companion_wifi firmware base to upstream MeshCore v1.15.0."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.0.1"
+    tag: "repeater-mqtt-eastmesh-v1.0.1"
+    date: "2026-04-09"
+    previous_version: null
+    summary: "First EastMesh repeater_mqtt release with MQTT uplink, optional local web panel support, and EastMesh-specific release plumbing."
+    changes:
+      - type: added
+        area: mqtt
+        text: "Added the EastMesh repeater_mqtt firmware track with MQTT uplink support and EastMesh-specific firmware workflows."
+      - type: added
+        area: web-panel
+        text: "Added the initial local HTTPS repeater web configuration panel for supported targets."
+      - type: added
+        area: release
+        text: "Added EastMesh release documentation, local build guidance, and CI workflows focused on the supported Wi-Fi and MQTT firmware tracks."
+      - type: changed
+        area: build
+        text: "Moved web panel certificate generation into the build flow and kept the web panel optional for tighter firmware targets."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.1.0"
+    tag: "repeater-mqtt-eastmesh-v1.1.0"
+    date: "2026-04-10"
+    previous_version: "1.0.1"
+    summary: "Expanded the repeater web panel with a fuller dashboard and MQTT settings, and stabilised HTTPS/TLS startup."
+    changes:
+      - type: added
+        area: web-panel
+        text: "Added a repeater dashboard and in-panel MQTT settings controls."
+      - type: changed
+        area: web-panel
+        text: "Stabilised HTTPS/TLS startup behaviour for the local repeater web panel."
+      - type: changed
+        area: mqtt
+        text: "Refactored MQTT uplink handling to support the expanded web panel controls and cleaner repeater status reporting."
+      - type: docs
+        area: setup
+        text: "Added CLI rescue guidance for setting Wi-Fi on companion Wi-Fi builds and refreshed README/license content."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.1.1"
+    tag: "repeater-mqtt-eastmesh-v1.1.1"
+    date: "2026-04-10"
+    previous_version: "1.1.0"
+    summary: "Added mqtt.status control support and tightened the web panel and migration documentation."
+    changes:
+      - type: added
+        area: mqtt
+        text: "Added mqtt.status control/reporting support to make broker state easier to inspect from the repeater CLI."
+      - type: docs
+        area: migration
+        text: "Expanded migration guidance and aligned the docs site with the newer EastMesh structure."
+      - type: docs
+        area: web-panel
+        text: "Added dedicated web panel documentation and refreshed the site theme and navigation."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.1.2"
+    tag: "repeater-mqtt-eastmesh-v1.1.2"
+    date: "2026-04-10"
+    previous_version: "1.1.1"
+    summary: "Cleaned up legacy MQTT preference handling, restored status publishing, and expanded web panel controls."
+    changes:
+      - type: fixed
+        area: mqtt
+        text: "Cleared legacy MQTT preference fields so older persisted settings stopped leaking into current repeater behaviour."
+      - type: fixed
+        area: mqtt
+        text: "Restored MQTT status publishing after the earlier control changes."
+      - type: changed
+        area: web-panel
+        text: "Expanded the repeater web panel controls and updated the related CLI and web panel docs."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.2.0"
+    tag: "repeater-mqtt-eastmesh-v1.2.0"
+    date: "2026-04-11"
+    previous_version: "1.1.2"
+    summary: "Reduced MQTT and web-panel memory pressure, streamlined broker controls, and polished the repeater admin surface."
+    changes:
+      - type: changed
+        area: mqtt
+        text: "Reduced MQTT uplink memory pressure and improved runtime behaviour on constrained repeater targets."
+      - type: changed
+        area: web-panel
+        text: "Streamlined broker controls in the web panel and refreshed the end-user admin flow."
+      - type: fixed
+        area: web-panel
+        text: "Corrected the noise floor gauge colouring and exposed prv.key in the web console."
+      - type: added
+        area: board-support
+        text: "Added a battery reporting toggle for Heltec V3 repeater builds."
+      - type: docs
+        area: docs
+        text: "Simplified the end-user guides and aligned the web panel docs with the current UI."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.2.1"
+    tag: "repeater-mqtt-eastmesh-v1.2.1"
+    date: "2026-04-12"
+    previous_version: "1.2.0"
+    summary: "Made broker outages less disruptive and expanded the repeater web panel with radio presets and richer operational controls."
+    changes:
+      - type: fixed
+        area: mqtt
+        text: "Added graceful MQTT reconnect backoff during broker outages."
+      - type: added
+        area: web-panel
+        text: "Added radio preset controls, repeater info cards, and clock sync controls to the repeater web panel."
+      - type: docs
+        area: release
+        text: "Updated release guidance so the web panel can be used for common repeater setup before being disabled for maximum MQTT headroom."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.2.2"
+    tag: "repeater-mqtt-eastmesh-v1.2.2"
+    date: "2026-04-13"
+    previous_version: "1.2.1"
+    summary: "Reduced repeater web panel load pressure and improved MQTT diagnostics."
+    changes:
+      - type: changed
+        area: web-panel
+        text: "Reduced web panel runtime pressure so opening the admin UI had less impact on busy MQTT repeaters."
+      - type: added
+        area: mqtt
+        text: "Improved MQTT diagnostics and status visibility for troubleshooting broker and uplink issues."
+      - type: docs
+        area: web-panel
+        text: "Updated the web panel documentation to match the lighter loading behaviour and operational guidance."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.0"
+    tag: "repeater-mqtt-eastmesh-v1.3.0"
+    date: "2026-04-15"
+    previous_version: "1.2.2"
+    summary: "Added SD-backed stats history and split the repeater web UI into a lighter /app page and a dedicated /stats console."
+    changes:
+      - type: added
+        area: stats
+        text: "Added SD-backed stats archival and restore support for repeater history data."
+      - type: added
+        area: web-panel
+        text: "Added a dedicated /stats web console for current status, historical trends, neighbours, and recent events."
+      - type: changed
+        area: web-panel
+        text: "Reworked the local web UI so /app stays focused on configuration and admin controls while /stats handles visibility and history."
+      - type: fixed
+        area: stats
+        text: "Restored /stats Wi-Fi signal quality and tuned the /stats signal, noise floor, and RSSI meters for correct LoRa-oriented ranges."
+      - type: changed
+        area: board-support
+        text: "Removed ESP32-C3 repeater_mqtt target support and the related CI coverage."
+      - type: docs
+        area: docs
+        text: "Expanded board comparison guidance and refreshed the published web panel screenshots and docs."
+    breaking_changes:
+      - "ESP32-C3 repeater_mqtt targets were removed in this release."
+
+  - track: repeater-mqtt
+    version: "1.3.1"
+    tag: "repeater-mqtt-eastmesh-v1.3.1"
+    date: "2026-04-16"
+    previous_version: "1.3.0"
+    summary: "Made web stats safer on non-PSRAM repeaters by defaulting them off, switching constrained boards to live-only history, and allocating stats buffers lazily."
+    changes:
+      - type: fixed
+        area: web-panel
+        text: "Disabled web stats by default on non-PSRAM repeater builds so the local web UI places less memory pressure on constrained boards."
+      - type: changed
+        area: stats
+        text: "Changed non-PSRAM repeater builds to a live-only stats mode with smaller in-memory history buffers instead of archive-backed persistence."
+      - type: fixed
+        area: stats
+        text: "Lazy-initialised web stats buffers and released idle live-only buffers so opening /stats has less impact on busy or memory-constrained repeaters."
+      - type: changed
+        area: web-panel
+        text: "Extended the web stats status output and JSON summary payloads to report whether history is running in live-only mode."
+      - type: docs
+        area: web-panel
+        text: "Refreshed the published web panel screenshots and docs to use separate light and dark mode captures."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.2"
+    tag: "repeater-mqtt-eastmesh-v1.3.2"
+    date: "2026-04-17"
+    previous_version: "1.3.1"
+    summary: "Refined the repeater /stats UX, added better early-event and noise-floor handling, and persisted the ESP32 fallback clock across reboot."
+    changes:
+      - type: fixed
+        area: stats
+        text: "Removed the misleading neighbour Route column from /stats and cleaned up the neighbour table payload to match the stored data."
+      - type: changed
+        area: stats
+        text: "Retuned the /stats radio noise-floor meter and added a dedicated noise-floor trend with clearer ranges, colour bands, and orientation."
+      - type: changed
+        area: web-panel
+        text: "Reordered the /stats trend cards and changed Packet Activity to a bar chart for interval-based packet counts."
+      - type: fixed
+        area: stats
+        text: "Captured boot/session events earlier on live-only non-PSRAM repeaters so the Events panel is populated before /stats is first opened."
+      - type: fixed
+        area: clock
+        text: "Persisted the ESP32 fallback clock in NVS with immediate saves on sync and periodic checkpoints so boards without a hardware RTC recover a recent sane epoch after reboot."
+      - type: changed
+        area: web-panel
+        text: "Remembered whether the local web UI was last on /app or /stats and returned to that page after unlocking again."
+      - type: changed
+        area: mqtt
+        text: "Changed the Services MQTT status to report degraded when only some enabled MQTT brokers are connected instead of treating any single connected broker as fully up."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.3"
+    tag: "repeater-mqtt-eastmesh-v1.3.3"
+    date: "2026-04-17"
+    previous_version: "1.3.2"
+    summary: "Improved /stats memory visibility, tightened web stats startup on 2 MB-class PSRAM boards, polished the local repeater admin UI, and pulled in a high-level upstream MeshCore sync."
+    changes:
+      - type: fixed
+        area: stats
+        text: "Adjusted boot auto-capture for web stats to recognise 2 MB-class ESP32 PSRAM sizes instead of requiring an exact 2 MiB boundary."
+      - type: changed
+        area: stats
+        text: "Extended `get web.stats.status` with focused startup diagnostics for PSRAM size and boot auto-capture, while trimming low-value fields so the reply fits cleanly."
+      - type: changed
+        area: web-panel
+        text: "Updated the /stats Memory card to promote Heap Free, refine its headroom thresholds, and align the memory trend colours with the recent heap-free state."
+      - type: fixed
+        area: web-panel
+        text: "Captured the /stats summary memory snapshot earlier in the request path so the live memory values are more consistent while the page is loading."
+      - type: changed
+        area: web-panel
+        text: "Changed the local web panel tab title to use the repeater name when available, with a fallback to `Repeater Config`."
+      - type: changed
+        area: upstream
+        text: "Synced with newer upstream MeshCore `dev` changes, including region/default-scope CLI support, companion default-scope handling, board/platform updates, and refreshed upstream documentation."
+      - type: docs
+        area: web-panel
+        text: "Updated the web panel docs to describe the rough 2 MB PSRAM boot-history cutoff."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.4"
+    tag: "repeater-mqtt-eastmesh-v1.3.4"
+    date: "2026-04-18"
+    previous_version: "1.3.3"
+    summary: "Polished the repeater web panel, fixed a T-Beam 1W build issue, and synced the documented web CLI allowlist with the shipped browser console."
+    changes:
+      - type: fixed
+        area: board-support
+        text: "Added the missing T-Beam 1W flash partition size so the repeater_mqtt target builds with the correct partition layout."
+      - type: changed
+        area: web-panel
+        text: "Cached the repeater title across both the /app and /stats pages so the local admin UI presents a more consistent device label."
+      - type: changed
+        area: web-panel
+        text: "Applied the newer four-band threshold styling to the largest-block memory meters in the /stats Memory card."
+      - type: docs
+        area: web-panel
+        text: "Updated the documented web CLI allowlist to match the actual browser command gate, including the AGC reset interval commands and the troubleshooting note for `noise_floor` reporting `0`."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.5"
+    tag: "repeater-mqtt-eastmesh-v1.3.5"
+    date: "2026-04-19"
+    previous_version: "1.3.4"
+    summary: "Prepares the next repeater_mqtt release on top of upstream MeshCore firmware v1.15.0."
+    changes:
+      - type: changed
+        area: upstream
+        text: "Updated the repeater_mqtt firmware base to upstream MeshCore v1.15.0."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.6"
+    tag: "repeater-mqtt-eastmesh-v1.3.6"
+    date: "2026-04-20"
+    previous_version: "1.3.5"
+    summary: "Opened the repeater web CLI fully after login, added HTTP-to-HTTPS redirect support, preserved /stats through the login bounce, and fixed 4 MB repeater partition layouts."
+    changes:
+      - type: changed
+        area: web-panel
+        text: "Removed the browser-side repeater CLI allowlist so authenticated web panel sessions can run the same CLI commands accepted by the repeater."
+      - type: added
+        area: web-panel
+        text: "Added a lightweight local HTTP listener that redirects browser requests to the repeater's HTTPS web panel URL."
+      - type: changed
+        area: web-panel
+        text: "Changed the login flow so refreshing /stats and re-authenticating returns to /stats without persisting the last page in browser storage."
+      - type: fixed
+        area: board-support
+        text: "Updated repeater_mqtt partition layouts for 4 MB boards so the affected targets use the correct flash sizing."
+      - type: docs
+        area: web-panel
+        text: "Updated the repeater web panel and custom CLI docs to reflect full web CLI access and the new HTTP-to-HTTPS behavior."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.7"
+    tag: "repeater-mqtt-eastmesh-v1.3.7"
+    date: "2026-04-20"
+    previous_version: "1.3.6"
+    summary: "Made MQTT IATA explicit on fresh repeater installs, blocked broker connects until it is configured, and surfaced the missing-IATA state in the web panel and CLI status."
+    changes:
+      - type: changed
+        area: mqtt
+        text: "Changed fresh repeater_mqtt defaults to use `mqtt.iata=UNSET` instead of pre-filling Melbourne."
+      - type: fixed
+        area: mqtt
+        text: "Blocked EastMesh and LetsMesh broker connection attempts while `mqtt.iata` is unset, and reported `invalid iata` in `get mqtt.status` for enabled brokers until a real code is saved."
+      - type: changed
+        area: web-panel
+        text: "Added a top-of-page warning banner and inline MQTT Settings warning when the repeater still needs its MQTT IATA configured."
+      - type: docs
+        area: mqtt
+        text: "Updated the custom CLI and web panel docs to describe the unset-first MQTT IATA flow and the resulting broker behaviour."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.8"
+    tag: "repeater-mqtt-eastmesh-v1.3.8"
+    date: "2026-04-21"
+    previous_version: "1.3.7"
+    summary: "Expanded repeater `/stats` with environment telemetry and persisted trends, and hardened archive startup on shared-SPI boards."
+    changes:
+      - type: fixed
+        area: web-panel
+        text: "Fixed Radio Settings preset application in the repeater web panel so the generated `set radio` command uses the comma-separated format accepted by the CLI."
+      - type: added
+        area: board-support
+        text: "Added T-Beam 1W repeater fan CLI controls with persisted mode and post-TX timeout settings."
+      - type: added
+        area: board-support
+        text: "Added T-Beam 1W manual fan mode handling so `fan off` stays off, `fan on` stays on, and TX hold only applies while the board is in auto mode."
+      - type: fixed
+        area: stats
+        text: "Stabilised T-Beam 1W web stats with SD archive enabled by making archive access reuse the same SPI object as the LoRa radio on the board's shared SPI bus."
+      - type: added
+        area: web-panel
+        text: "Added an optional `Environment` section on `/stats` for boards that expose GPS or environmental telemetry, and hid metrics that have no current reading."
+      - type: added
+        area: stats
+        text: "Extended `/stats` history persistence in PSRAM and on the SD-backed archive to capture supported environment telemetry, including voltage, temperatures, humidity, barometer, altitude, and GPS satellites."
+      - type: added
+        area: stats
+        text: "Added environment trend series to `/stats`, including a GPS satellites graph that only appears when GPS is enabled."
+      - type: fixed
+        area: board-support
+        text: "Hardened archive startup on the T-Beam S3 Supreme by providing a safe default shared-archive SPI hook so boards without an override do not crash during early boot."
+      - type: docs
+        area: docs
+        text: "Updated the web panel, API, and custom CLI docs to cover the environment summary/trends, stats persistence behaviour, and existing T-Beam 1W fan controls."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.9"
+    tag: "repeater-mqtt-eastmesh-v1.3.9"
+    date: "2026-04-22"
+    previous_version: "1.3.8"
+    summary: "Reduced unnecessary repeater battery polling by removing hot-loop MQTT sampling and reusing throttled battery reads across stats and web status paths."
+    changes:
+      - type: fixed
+        area: mqtt
+        text: "Stopped rebuilding the MQTT status battery reading from a fresh ADC sample on every repeater loop iteration and switched that path to a throttled cached value instead."
+      - type: changed
+        area: stats
+        text: "Reused a single battery sample across the web stats history and summary builders so one logical stats operation no longer performs multiple immediate battery reads."
+      - type: fixed
+        area: board-support
+        text: "Reduced Heltec V3 battery-sense activity while MQTT and web features are active, while still keeping explicit status and telemetry requests on a fresh reading path."
+      - type: changed
+        area: board-support
+        text: "Removed the obsolete battery reporting toggle path and its stale CLI documentation now that repeater battery sampling is handled correctly without a board-level reporting disable switch."
+      - type: docs
+        area: docs
+        text: "Updated the custom CLI docs to note that repeater MQTT background battery sampling is now rate-limited while explicit status and telemetry requests still refresh immediately."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.10"
+    tag: "repeater-mqtt-eastmesh-v1.3.10"
+    date: "2026-04-22"
+    previous_version: "1.3.9"
+    summary: "Made `/stats` battery display board-aware and corrected count-trend rendering for restored packet activity and GPS satellites."
+    changes:
+      - type: changed
+        area: stats
+        text: "Updated the `/stats` Core battery meter to prefer a board-reported battery percentage when available and otherwise scale from a board-specific battery voltage range instead of a fixed single-cell assumption."
+      - type: added
+        area: board-support
+        text: "Added default board battery range hints to the board abstraction and set the T-Beam 1W repeater battery profile to a 2S `6000-8400 mV` range for the web stats path."
+      - type: fixed
+        area: web-panel
+        text: "Corrected `/stats` packet activity and GPS satellites bar charts so restored zero values no longer draw phantom bars and the final bar uses the same spacing as the rest of the series."
+      - type: added
+        area: mqtt
+        text: "Added a `get mqtt.client_version` repeater CLI command and exposed the same value in the `/app` quick MQTT command buttons."
+      - type: changed
+        area: web-panel
+        text: "Reworked the `/app` Info panel to show `Version` and `Client Version`, and moved `Clock UTC` into Repeater Settings beside Device Name."
+      - type: fixed
+        area: web-panel
+        text: "Narrowed `start ota` handling so the repeater only releases the local HTTP redirect listener on port `80`, allowing ElegantOTA to start without unnecessarily stopping the rest of the repeater services."
+      - type: docs
+        area: docs
+        text: "Updated the web panel, API, and custom CLI docs to describe the board-aware battery display, the new MQTT client-version command, and the revised `/app` layout."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.3.11"
+    tag: "repeater-mqtt-eastmesh-v1.3.11"
+    date: "2026-04-23"
+    previous_version: "1.3.10"
+    summary: "Makes OTA startup consistent across command sources, fixes T-Beam 1W SX1262 repeater builds, and cleans up PMU-backed battery stats in `/stats`."
+    changes:
+      - type: fixed
+        area: web-panel
+        text: "Moved OTA startup preparation into the shared repeater web service path so `start ota` now behaves consistently whether it is triggered from the web panel, serial CLI, or a remote CLI session."
+      - type: fixed
+        area: web-panel
+        text: "Fixed the old repeater OTA redirect glitch so starting an upgrade no longer falls into the earlier odd redirect behaviour before the OTA page loads."
+      - type: fixed
+        area: board-support
+        text: "Added the missing `USE_SX1262` build flag for the LilyGo T-Beam 1W repeater target so the `*_repeater_mqtt` variant builds with the correct radio configuration."
+      - type: fixed
+        area: stats
+        text: "Cleaned up `/stats` battery details on PMU-backed boards so the Core battery card no longer shows a synthetic battery-voltage range beside a board-reported battery percentage."
+      - type: docs
+        area: web-panel
+        text: "Updated the web panel and custom CLI docs to note the OTA redirect fallback on older builds and to describe the consistent `start ota` handling across command sources."
+    breaking_changes: []
+
+  - track: repeater-mqtt
+    version: "1.4.0"
+    tag: "repeater-mqtt-meshcoretel-v1.4.0"
+    date: "2026-09-01"
+    previous_version: "1.3.11"
+    summary: "Adds an interactive packet monitor and node map, map-based repeater coordinates, board-aware Heltec V4 TX power controls, and safer Wi-Fi configuration in the local web panel."
+    changes:
+      - type: added
+        area: packet-monitor
+        text: "Added `/packets` with a 128-entry in-memory RX/TX/TX-failed metadata log, filters, live updates, CSV export, and per-packet detail dialogs."
+      - type: added
+        area: map
+        text: "Added a Leaflet/OpenStreetMap packet map with verified advert nodes, inferred path hops, three-second packet animations, and a viewport that remains under user control after initial fitting."
+      - type: added
+        area: map
+        text: "Added a 128-node Heltec V4 verified advert registry that retains known coordinates without eviction until the board reboots and is not cleared with the packet ring buffer."
+      - type: added
+        area: web-panel
+        text: "Added a map picker for repeater coordinates and an atomic Wi-Fi credentials update path."
+      - type: added
+        area: radio
+        text: "Added board-output TX power control for high-power Heltec V4 builds, capped at the board hardware maximum of 28 dBm and translated to the SX1262 drive level."
+      - type: added
+        area: api
+        text: "Added `/api/packets` plus `get web.packets.status`, `clear web.packets`, `get web.tx`, and `set web.tx` integration for the web panel."
+      - type: docs
+        area: docs
+        text: "Added a detailed Heltec V4 web monitor guide covering hardware scope, OTA and USB installation, first setup, packet interpretation, security, limitations, and troubleshooting."
+    breaking_changes: []

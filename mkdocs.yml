@@ -1,0 +1,47 @@
+site_name: "Heltec V4 Web Monitor"
+site_url: https://enotikov.github.io/heltec-v4-web-monitor/
+site_description: "Документация прошивки Heltec V4 Web Monitor: Wi-Fi, MQTT MeshCoreTel, веб-панель, монитор пакетов и API"
+
+repo_name: enotikov/heltec-v4-web-monitor
+repo_url: https://github.com/enotikov/heltec-v4-web-monitor
+edit_uri: edit/main/meshcoretel-docs/
+docs_dir: meshcoretel-docs
+
+theme:
+  name: material
+  language: ru
+  logo: _assets/heltec-v4-web-monitor.svg
+  favicon: _assets/heltec-v4-web-monitor.svg
+  features:
+    - content.action.edit
+    - content.code.copy
+    - search.highlight
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Переключить на темную тему
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Переключить на светлую тему
+
+extra_css:
+  - _stylesheets/extra.css
+
+nav:
+  - Введение: index.md
+  - Устройства: boards.md
+  - Прошивка: releases.md
+  - Heltec V4 Web Monitor: heltec-v4-web-monitor.md
+  - CLI-команды: custom-cli.md
+  - Веб-панель: web-panel.md
+  - Веб-API: api.md
+  - Cборка: local-builds.md
